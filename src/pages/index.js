@@ -22,7 +22,6 @@ const IndexPage = ({ data }) => {
     }
   }
 
-  console.log(data)
   let acc
 
   let hospitalized = {
@@ -65,7 +64,6 @@ const IndexPage = ({ data }) => {
     borderColor: 'red',
     showLine: true
   }
-  console.log(icu)
   return (
     <Layout>
       <SEO title="Home" />
