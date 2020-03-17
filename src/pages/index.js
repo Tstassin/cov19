@@ -10,6 +10,10 @@ import "./mystyles.scss"
 
 const IndexPage = ({ data }) => {
 
+  const success = '#48C774'
+  const warning = '#FFDD57'
+  const danger = '#F14668'
+
   const defaultOptions = {
     scales: {
       xAxes: [{
@@ -30,17 +34,17 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'hospitalized',
       dataLabel: 'Hospitalized',
-      dataColor: 'green'
+      dataColor: success
     },
     {
       dataName: 'icu',
       dataLabel: 'ICU',
-      dataColor: 'orange'
+      dataColor: warning
     },
     {
       dataName: 'deceased',
       dataLabel: 'Deceased',
-      dataColor: 'red'
+      dataColor: danger
     },
   ]
 
@@ -56,32 +60,67 @@ const IndexPage = ({ data }) => {
   }
 
   const newCasesPerDay = {
-    datasets: dataSets.map(({dataLabel, dataName, dataColor}) => ({
-        label: dataLabel,
-        data: getDataPoints(data.allCovid19Data, dataName),
-        borderColor: dataColor,
-        ...defaultDataOptions
-      }))
+    datasets: dataSets.map(({ dataLabel, dataName, dataColor }) => ({
+      label: dataLabel,
+      data: getDataPoints(data.allCovid19Data, dataName),
+      borderColor: dataColor,
+      ...defaultDataOptions
+    }))
   }
   const newCasesPerDaySUM = {
-    datasets: dataSets.map(({dataLabel, dataName, dataColor}) => ({
-        label: "TOTAL " + dataLabel,
-        data: getSummedDataPoints(data.allCovid19Data, dataName),
-        borderColor: dataColor,
-        ...defaultDataOptions
-      }))
+    datasets: dataSets.map(({ dataLabel, dataName, dataColor }) => ({
+      label: "TOTAL " + dataLabel,
+      data: getSummedDataPoints(data.allCovid19Data, dataName),
+      borderColor: dataColor,
+      ...defaultDataOptions
+    }))
   }
 
   return (
     <Layout>
       <SEO title="Home" />
       <div className="section">
-        <h2 className="title is-2">New cases per day</h2>
-        <Scatter data={newCasesPerDay} options={defaultOptions} redraw={true}></Scatter>
-      </div>
-      <div className="section">
-        <h2 className="title is-2">Total cases</h2>
-        <Scatter data={newCasesPerDaySUM} options={defaultOptions} redraw={true}></Scatter>
+        <h2 className="title is-2">Covid19 Status</h2>
+        <p className="subtitle is-4">up to {[...newCasesPerDay.datasets[0].data].pop().t}</p>
+        <div class="field is-grouped is-grouped-multiline">
+          <div class="control">
+            <div class="tags are-medium has-addons">
+              <span class="tag is-success">Hospitalized</span>
+              <span class="tag">
+                {[...newCasesPerDaySUM.datasets[0].data].pop().y}
+                <span class="tag is-size-7">&nbsp;(+{[...newCasesPerDay.datasets[0].data].pop().y})</span>
+              </span>
+            </div>
+          </div>
+          <div class="control">
+            <div class="tags are-medium has-addons">
+              <span class="tag is-warning">ICU</span>
+              <span class="tag">
+                {[...newCasesPerDaySUM.datasets[1].data].pop().y}
+                <span class="tag is-size-7">&nbsp;(+{[...newCasesPerDay.datasets[1].data].pop().y})</span>
+              </span>
+            </div>
+          </div>
+          <div class="control">
+            <div class="tags are-medium has-addons">
+              <span class="tag is-danger">Deceased</span>
+              <span class="tag">
+                {[...newCasesPerDaySUM.datasets[2].data].pop().y}
+                <span class="tag is-size-7">&nbsp;(+{[...newCasesPerDay.datasets[2].data].pop().y})</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="section">
+          <h2 className="title is-2">New cases per day</h2>
+          <p className="subtitle is-4">up to {[...newCasesPerDay.datasets[0].data].pop().t}</p>
+          <Scatter data={newCasesPerDay} options={defaultOptions} redraw={true}></Scatter>
+        </div>
+        <div className="section">
+          <h2 className="title is-2">Total cases</h2>
+          <p className="subtitle is-4">up to {[...newCasesPerDaySUM.datasets[0].data].pop().t}</p>
+          <Scatter data={newCasesPerDaySUM} options={defaultOptions} redraw={true}></Scatter>
+        </div>
       </div>
     </Layout>
   )
@@ -91,19 +130,19 @@ export default IndexPage
 
 export const query = graphql`
 query MyQuery {
-  allCovid19Data {
-    edges {
-      node {
+        allCovid19Data {
+        edges {
+        node {
         cumul_cases
         cumul_tests
-        daily_cases
-        daily_tests
-        icu
-        date
-        deceased
-        hospitalized
-      }
+      daily_cases
+      daily_tests
+      icu
+      date
+      deceased
+      hospitalized
     }
   }
+}
 }
 `
