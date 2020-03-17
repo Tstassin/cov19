@@ -15,7 +15,7 @@
     "gatsby-plugin-sass": "^2.1.31",
     "gatsby-plugin-sharp": "^2.4.12",
     "gatsby-source-filesystem": "^2.1.55",
-    "gatsby-source-json": "^1.0.0",
+    "gatsby-source-json": "github:tstassin/gatsby-source-json",
     "gatsby-transformer-sharp": "^2.3.18",
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
