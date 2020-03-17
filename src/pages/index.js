@@ -5,14 +5,16 @@ import Layout from "../components/layout"
 import Image from "../components/image"
 import SEO from "../components/seo"
 
+import "./mystyles.scss"
+
 const IndexPage = ({ data }) => (
   <Layout>
     {console.log(data)}
     <SEO title="Home" />
-    <h1>Covid19 Status in Belgium</h1>
+    <h1 className="title is-1">Covid19 Status in Belgium</h1>
     
     <ul>
-      {data.allData.edges.map(data => <li>{data.node.date}</li>)}
+      {data.allCovid19Data.edges.map(data => <li>{data.node.date}</li>)}
     </ul>
   </Layout>
 )
@@ -21,7 +23,7 @@ export default IndexPage
 
 export const query = graphql`
 query MyQuery {
-  allData {
+  allCovid19Data {
     edges {
       node {
         cumul_cases
