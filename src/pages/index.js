@@ -16,6 +16,7 @@ const IndexPage = ({ data }) => {
         type: 'time',
         time: {
           parser: 'DD/MM/YYYY',
+          unit: 'day'
         }
       }]
     }
