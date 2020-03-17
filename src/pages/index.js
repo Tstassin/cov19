@@ -22,7 +22,8 @@ const IndexPage = ({ data }) => {
         time: {
           parser: 'DD/MM/YYYY',
           unit: 'day'
-        }
+        },
+        offset: true,
       }]
     }
   }
@@ -45,25 +46,37 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'deceased',
       dataLabel: 'Deceased',
-      dataColor: danger
+      dataColor: danger,
+      type: 'bar'
     },
     {
       dataName: 'released',
       dataLabel: 'Released',
-      dataColor: info
+      dataColor: info,
+      type: 'bar'
     },
   ]
 
   const getDataPoints = (data, dataName) => data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: dataPoint.node[dataName] }))
 
   const statusPerDay = {
-    datasets: dataSets.map(({ dataLabel, dataName, dataColor }) => ({
+    datasets: dataSets.map(({ dataLabel, dataName, dataColor, type }) => ({
       label: dataLabel,
       data: getDataPoints(data.allCovid19Data, dataName),
       borderColor: dataColor,
+      type: type && type,
+      offset: true,
+      backgroundColor: type && type === 'bar' && dataColor,
       ...defaultDataOptions
     }))
   }
+
+  const getProgression = (data) => {
+    const progressionRatio = (data[data.length - 1].y - data[data.length - 2].y) / data[data.length - 1].y
+    const percentage = Math.round(progressionRatio * 100)
+    return ((percentage > 0) && "+") + percentage + "%"
+  }
+
 
   return (
     <Layout>
@@ -74,17 +87,22 @@ const IndexPage = ({ data }) => {
         <div class="field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-success">Hospitalized</span>
-              <span class="tag">{[...statusPerDay.datasets[0].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;daily</span>
+              <span class="tag is-success has-text-weight-semibold">
+                Hospitalized
+                <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[0].data].pop().t}</span>
+              </span>
+              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[0].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[0].data)}</span>
               </span>
             </div>
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-warning">ICU</span>
-              <span class="tag">{[...statusPerDay.datasets[1].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;daily</span>
+              <span class="tag is-warning has-text-weight-semibold">
+                ICU
+                <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[1].data].pop().t}</span></span>
+              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[1].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[1].data)}</span>
               </span>
             </div>
           </div>
@@ -92,16 +110,23 @@ const IndexPage = ({ data }) => {
         <div class="field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-danger">Deceased</span>
-              <span class="tag">{[...statusPerDay.datasets[2].data].pop().y}
+              <span class="tag is-danger has-text-weight-semibold">
+              Deceased
+              <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;TOTAL</span>
+              </span>
+              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[2].data].pop().y}
                 <span class="tags are-small is-size-7">&nbsp;total</span>
               </span>
             </div>
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-info">Released</span>
-              <span class="tag">{[...statusPerDay.datasets[3].data].pop().y}
+              <span class="tag is-info has-text-weight-semibold">
+              Released
+              <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;TOTAL</span>
+
+              </span>
+              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[3].data].pop().y}
                 <span class="tags are-small is-size-7">&nbsp;total</span>
               </span>
             </div>
@@ -112,15 +137,13 @@ const IndexPage = ({ data }) => {
         <h2 className="title is-3 is-size-4-mobile">Status per day</h2>
         <p className="subtitle is-5 is-size-6-mobile">up to {[...statusPerDay.datasets[0].data].pop().t}</p>
         <Scatter data={statusPerDay} options={defaultOptions} redraw={true}></Scatter>
-
-      </div>
-      <div className="section">
+        <br />
         <h3 className="title is-5">Legend</h3>
         <ul>
-          <li><b>Hospitalized</b> : # people receiving medical care in a hospital on given day</li>
-          <li><b>ICU</b> : # people receiving medical care in a hospital's Intensive Care Unit on given day</li>
-          <li><b>Deceased (total)</b> : # people officially deceased with Covid-19 to given day</li>
-          <li><b>Released (total)</b> : # people officially officially cured of Covid-19 after being hospitalized</li>
+          <li><span className="tag is-success">&nbsp;</span> <b>Hospitalized (daily count)</b> : # people receiving medical care in hospitals on given day</li>
+          <li><span className="tag is-warning">&nbsp;</span> <b>ICU (daily count)</b> : # people receiving medical care in Intensive Care Units on given day</li>
+          <li><span className="tag is-danger">&nbsp;</span> <b>Deceased (total)</b> : # people officially deceased with Covid-19 up to given day</li>
+          <li><span className="tag is-info">&nbsp;</span> <b>Released (total)</b> : # people officially cured of Covid-19 after being hospitalized up to given day</li>
         </ul>
       </div>
     </Layout>
