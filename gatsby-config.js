@@ -27,6 +27,17 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
+    {
+      resolve: 'gatsby-source-json',
+      options: {
+        // name the gatsby node
+        name: 'covid19Data',
+        // url for JSON endpoint
+        uri: 'https://raw.githubusercontent.com/eschnou/covid19-be/master/covid19-belgium.json',
+        // image location to process images. Default: "image.url"
+        //image_location: "image.url",
+      }
+    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     `gatsby-plugin-offline`,
