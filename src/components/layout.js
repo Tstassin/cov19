@@ -7,7 +7,7 @@
 
 import React from "react"
 import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+import { useStaticQuery, graphql, Link } from "gatsby"
 
 import Header from "./header"
 
@@ -35,6 +35,8 @@ const Layout = ({ children }) => {
           <a href="https://bulma.io"> Bulma</a>
           <br /> data from
           <a href="https://github.com/eschnou/covid19-be"> eschnou/covid19-be</a>
+          <br /> written by 
+          <a href="https://github.com/Tstassin/cov19"> tstassin</a>
         </footer>
     </>
   )

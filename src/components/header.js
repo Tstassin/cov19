@@ -7,7 +7,7 @@ const Header = ({ siteTitle }) => (
     <nav class="navbar has-text-light has-background-primary" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="/">
-          <h1 className="is-1 title" style={{ margin: 0 }}>
+          <h1 className="is-1 is-size-5-mobile title" style={{ margin: 0 }}>
             <Link
               to="/"
               style={{
