@@ -39,8 +39,9 @@ const Layout = ({ children }) => {
           <a href="https://www.gatsbyjs.org">Gatsby</a>, 
           <a href="https://www.chartjs.org"> Chart.js</a>,
           <a href="https://bulma.io"> Bulma</a>
-          <br /> data from
-          <a href="https://github.com/eschnou/covid19-be"> eschnou/covid19-be</a>
+          <br /> opendata from
+          <a href="https://github.com/eschnou/covid19-be"> eschnou/covid19-be </a> 
+          (data sources : <a href="https://www.info-coronavirus.be/fr/news/">info-coronavirus.be</a> and <a href="https://epidemio.wiv-isp.be/ID/Pages/2019-nCoV_epidemiological_situation.aspx">sciensano</a>)
           <br /> written by 
           <a href="https://github.com/Tstassin/cov19"> tstassin</a>
         </footer>
