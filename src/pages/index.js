@@ -22,58 +22,66 @@ const IndexPage = ({ data }) => {
     }
   }
 
-  let acc
+  const defaultDataOptions = {
+    showLine: true,
+  }
 
-  let hospitalized = {
-    label: 'Hospitalized',
-    data: data.allCovid19Data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: dataPoint.node.hospitalized })),
-    borderColor: 'green',
-    showLine: true
+  const dataSets = [
+    {
+      dataName: 'hospitalized',
+      dataLabel: 'Hospitalized',
+      dataColor: 'green'
+    },
+    {
+      dataName: 'icu',
+      dataLabel: 'ICU',
+      dataColor: 'orange'
+    },
+    {
+      dataName: 'deceased',
+      dataLabel: 'Deceased',
+      dataColor: 'red'
+    },
+  ]
+
+  const getDataPoints = (data, dataName) => data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: dataPoint.node[dataName] }))
+  const getSummedDataPoints = (data, dataName) => {
+    let acc = 0
+    return data.edges.map(dataPoint => (
+      {
+        t: dataPoint.node.date,
+        y: parseInt(dataPoint.node[dataName]) ? acc += parseInt(dataPoint.node[dataName]) : acc
+      })
+    )
   }
-  acc = 0
-  let sumHospitalized = {
-    label: 'TOTAL Hospitalized',
-    data: data.allCovid19Data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: parseInt(dataPoint.node.hospitalized) ? acc += parseInt(dataPoint.node.hospitalized) : acc })),
-    borderColor: 'green',
-    showLine: true
+
+  const newCasesPerDay = {
+    datasets: dataSets.map(({dataLabel, dataName, dataColor}) => ({
+        label: dataLabel,
+        data: getDataPoints(data.allCovid19Data, dataName),
+        borderColor: dataColor,
+        ...defaultDataOptions
+      }))
   }
-  console.log(sumHospitalized)
-  let icu = {
-    label: 'ICU',
-    data: data.allCovid19Data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: dataPoint.node.icu })),
-    borderColor: 'orange',
-    showLine: true
+  const newCasesPerDaySUM = {
+    datasets: dataSets.map(({dataLabel, dataName, dataColor}) => ({
+        label: "TOTAL " + dataLabel,
+        data: getSummedDataPoints(data.allCovid19Data, dataName),
+        borderColor: dataColor,
+        ...defaultDataOptions
+      }))
   }
-  acc = 0
-  let sumIcu = {
-    label: 'TOTAL ICU',
-    data: data.allCovid19Data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: parseInt(dataPoint.node.icu) ? acc += parseInt(dataPoint.node.icu) : acc })),
-    borderColor: 'orange',
-    showLine: true
-  }
-  let deceased = {
-    label: 'Deceased',
-    data: data.allCovid19Data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: dataPoint.node.deceased })),
-    borderColor: 'red',
-    showLine: true
-  }
-  acc = 0
-  let sumDeceased = {
-    label: 'TOTAL Deceased',
-    data: data.allCovid19Data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: parseInt(dataPoint.node.deceased) ? acc += parseInt(dataPoint.node.deceased) : acc })),
-    borderColor: 'red',
-    showLine: true
-  }
+
   return (
     <Layout>
       <SEO title="Home" />
       <div className="section">
         <h2 className="title is-2">New cases per day</h2>
-        <Scatter data={{ datasets: [hospitalized, icu, deceased,] }} options={defaultOptions} redraw={true}></Scatter>
-        </div>
+        <Scatter data={newCasesPerDay} options={defaultOptions} redraw={true}></Scatter>
+      </div>
       <div className="section">
         <h2 className="title is-2">Total cases</h2>
-        <Scatter data={{ datasets: [sumHospitalized, sumIcu, sumDeceased,] }} options={defaultOptions} redraw={true}></Scatter>
+        <Scatter data={newCasesPerDaySUM} options={defaultOptions} redraw={true}></Scatter>
       </div>
     </Layout>
   )
