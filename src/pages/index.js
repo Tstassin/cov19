@@ -86,11 +86,20 @@ const IndexPage = ({ data }) => {
           </div>
         </div>
       </div>
-        <div className="section">
-          <h2 className="title is-3 is-size-4-mobile">Status per day</h2>
-          <p className="subtitle is-5 is-size-6-mobile">up to {[...statusPerDay.datasets[0].data].pop().t}</p>
-          <Scatter data={statusPerDay} options={defaultOptions} redraw={true}></Scatter>
-        </div>
+      <div className="section">
+        <h2 className="title is-3 is-size-4-mobile">Status per day</h2>
+        <p className="subtitle is-5 is-size-6-mobile">up to {[...statusPerDay.datasets[0].data].pop().t}</p>
+        <Scatter data={statusPerDay} options={defaultOptions} redraw={true}></Scatter>
+      
+      </div>
+      <div className="section">
+      <h3 className="title is-5">Legend</h3>
+        <ul>
+          <li><b>Hospitalized</b> : # people receiving medical care in a hospital on given day</li>
+          <li><b>ICU</b> : # people receiving medical care in a hospital's Intensive Care Unit on given day</li>
+          <li><b>Deceased</b> : # people officially deceased with Covid-19 to given day</li>
+        </ul>
+      </div>
     </Layout>
   )
 }
