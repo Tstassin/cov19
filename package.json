@@ -6,6 +6,7 @@
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
     "bulma": "^0.8.0",
+    "chart.js": "^2.9.3",
     "gatsby": "^2.19.43",
     "gatsby-image": "^2.2.43",
     "gatsby-plugin-manifest": "^2.2.47",
@@ -19,6 +20,7 @@
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
+    "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.12.0",
     "react-helmet": "^5.2.1"
   },
