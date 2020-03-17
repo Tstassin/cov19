@@ -13,6 +13,7 @@ const IndexPage = ({ data }) => {
   const success = '#48C774'
   const warning = '#FFDD57'
   const danger = '#F14668'
+  const info = 'hsl(204, 86%, 53%)'
 
   const defaultOptions = {
     scales: {
@@ -45,6 +46,11 @@ const IndexPage = ({ data }) => {
       dataName: 'deceased',
       dataLabel: 'Deceased',
       dataColor: danger
+    },
+    {
+      dataName: 'released',
+      dataLabel: 'Released',
+      dataColor: info
     },
   ]
 
@@ -84,6 +90,12 @@ const IndexPage = ({ data }) => {
               <span class="tag">{[...statusPerDay.datasets[2].data].pop().y}</span>
             </div>
           </div>
+          <div class="control">
+            <div class="tags are-medium has-addons">
+              <span class="tag is-info">Released</span>
+              <span class="tag">{[...statusPerDay.datasets[3].data].pop().y}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div className="section">
@@ -98,6 +110,7 @@ const IndexPage = ({ data }) => {
           <li><b>Hospitalized</b> : # people receiving medical care in a hospital on given day</li>
           <li><b>ICU</b> : # people receiving medical care in a hospital's Intensive Care Unit on given day</li>
           <li><b>Deceased</b> : # people officially deceased with Covid-19 to given day</li>
+          <li><b>Released</b> : # people officially officially cured of Covid-19 after being hospitalized</li>
         </ul>
       </div>
     </Layout>
@@ -119,6 +132,7 @@ query MyQuery {
       date
       deceased
       hospitalized
+      released
     }
   }
 }
