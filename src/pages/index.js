@@ -70,30 +70,40 @@ const IndexPage = ({ data }) => {
       <SEO title="Home" />
       <div className="section">
         <h2 className="title is-3 is-size-4-mobile">Covid19 Status</h2>
-        <p className="subtitle is-5 is-size-6-mobile">on {[...statusPerDay.datasets[0].data].pop().t}</p>
+        <p className="subtitle is-5 is-size-6-mobile">updated {[...statusPerDay.datasets[0].data].pop().t}</p>
         <div class="field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags are-medium has-addons">
               <span class="tag is-success">Hospitalized</span>
-              <span class="tag">{[...statusPerDay.datasets[0].data].pop().y}</span>
+              <span class="tag">{[...statusPerDay.datasets[0].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;daily</span>
+              </span>
             </div>
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
               <span class="tag is-warning">ICU</span>
-              <span class="tag">{[...statusPerDay.datasets[1].data].pop().y}</span>
+              <span class="tag">{[...statusPerDay.datasets[1].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;daily</span>
+              </span>
             </div>
           </div>
+        </div>
+        <div class="field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags are-medium has-addons">
               <span class="tag is-danger">Deceased</span>
-              <span class="tag">{[...statusPerDay.datasets[2].data].pop().y}</span>
+              <span class="tag">{[...statusPerDay.datasets[2].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;total</span>
+              </span>
             </div>
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
               <span class="tag is-info">Released</span>
-              <span class="tag">{[...statusPerDay.datasets[3].data].pop().y}</span>
+              <span class="tag">{[...statusPerDay.datasets[3].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;total</span>
+              </span>
             </div>
           </div>
         </div>
@@ -102,15 +112,15 @@ const IndexPage = ({ data }) => {
         <h2 className="title is-3 is-size-4-mobile">Status per day</h2>
         <p className="subtitle is-5 is-size-6-mobile">up to {[...statusPerDay.datasets[0].data].pop().t}</p>
         <Scatter data={statusPerDay} options={defaultOptions} redraw={true}></Scatter>
-      
+
       </div>
       <div className="section">
-      <h3 className="title is-5">Legend</h3>
+        <h3 className="title is-5">Legend</h3>
         <ul>
           <li><b>Hospitalized</b> : # people receiving medical care in a hospital on given day</li>
           <li><b>ICU</b> : # people receiving medical care in a hospital's Intensive Care Unit on given day</li>
-          <li><b>Deceased</b> : # people officially deceased with Covid-19 to given day</li>
-          <li><b>Released</b> : # people officially officially cured of Covid-19 after being hospitalized</li>
+          <li><b>Deceased (total)</b> : # people officially deceased with Covid-19 to given day</li>
+          <li><b>Released (total)</b> : # people officially officially cured of Covid-19 after being hospitalized</li>
         </ul>
       </div>
     </Layout>
