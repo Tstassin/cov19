@@ -1,6 +1,6 @@
 import React from "react"
-import { Link, graphql } from "gatsby"
-import { Line, Scatter } from "react-chartjs-2"
+import { graphql } from "gatsby"
+import { Scatter } from "react-chartjs-2"
 
 import Layout from "../components/layout"
 import Image from "../components/image"
@@ -49,28 +49,11 @@ const IndexPage = ({ data }) => {
   ]
 
   const getDataPoints = (data, dataName) => data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: dataPoint.node[dataName] }))
-  const getSummedDataPoints = (data, dataName) => {
-    let acc = 0
-    return data.edges.map(dataPoint => (
-      {
-        t: dataPoint.node.date,
-        y: parseInt(dataPoint.node[dataName]) ? acc += parseInt(dataPoint.node[dataName]) : acc
-      })
-    )
-  }
 
-  const newCasesPerDay = {
+  const statusPerDay = {
     datasets: dataSets.map(({ dataLabel, dataName, dataColor }) => ({
       label: dataLabel,
       data: getDataPoints(data.allCovid19Data, dataName),
-      borderColor: dataColor,
-      ...defaultDataOptions
-    }))
-  }
-  const newCasesPerDaySUM = {
-    datasets: dataSets.map(({ dataLabel, dataName, dataColor }) => ({
-      label: "TOTAL " + dataLabel,
-      data: getSummedDataPoints(data.allCovid19Data, dataName),
       borderColor: dataColor,
       ...defaultDataOptions
     }))
@@ -81,47 +64,33 @@ const IndexPage = ({ data }) => {
       <SEO title="Home" />
       <div className="section">
         <h2 className="title is-2">Covid19 Status</h2>
-        <p className="subtitle is-4">up to {[...newCasesPerDay.datasets[0].data].pop().t}</p>
+        <p className="subtitle is-4">on {[...statusPerDay.datasets[0].data].pop().t}</p>
         <div class="field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags are-medium has-addons">
               <span class="tag is-success">Hospitalized</span>
-              <span class="tag">
-                {[...newCasesPerDaySUM.datasets[0].data].pop().y}
-                <span class="tag is-size-7">&nbsp;(+{[...newCasesPerDay.datasets[0].data].pop().y})</span>
-              </span>
+              <span class="tag">{[...statusPerDay.datasets[0].data].pop().y}</span>
             </div>
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
               <span class="tag is-warning">ICU</span>
-              <span class="tag">
-                {[...newCasesPerDaySUM.datasets[1].data].pop().y}
-                <span class="tag is-size-7">&nbsp;(+{[...newCasesPerDay.datasets[1].data].pop().y})</span>
-              </span>
+              <span class="tag">{[...statusPerDay.datasets[1].data].pop().y}</span>
             </div>
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
               <span class="tag is-danger">Deceased</span>
-              <span class="tag">
-                {[...newCasesPerDaySUM.datasets[2].data].pop().y}
-                <span class="tag is-size-7">&nbsp;(+{[...newCasesPerDay.datasets[2].data].pop().y})</span>
-              </span>
+              <span class="tag">{[...statusPerDay.datasets[2].data].pop().y}</span>
             </div>
           </div>
         </div>
-        <div className="section">
-          <h2 className="title is-2">New cases per day</h2>
-          <p className="subtitle is-4">up to {[...newCasesPerDay.datasets[0].data].pop().t}</p>
-          <Scatter data={newCasesPerDay} options={defaultOptions} redraw={true}></Scatter>
-        </div>
-        <div className="section">
-          <h2 className="title is-2">Total cases</h2>
-          <p className="subtitle is-4">up to {[...newCasesPerDaySUM.datasets[0].data].pop().t}</p>
-          <Scatter data={newCasesPerDaySUM} options={defaultOptions} redraw={true}></Scatter>
-        </div>
       </div>
+        <div className="section">
+          <h2 className="title is-2">Status per day</h2>
+          <p className="subtitle is-4">up to {[...statusPerDay.datasets[0].data].pop().t}</p>
+          <Scatter data={statusPerDay} options={defaultOptions} redraw={true}></Scatter>
+        </div>
     </Layout>
   )
 }
