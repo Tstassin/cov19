@@ -41,7 +41,7 @@ const Layout = ({ children }) => {
           <a href="https://bulma.io"> Bulma</a>
           <br /> opendata from
           <a href="https://github.com/eschnou/covid19-be"> eschnou/covid19-be </a> 
-          (data sources : <a href="https://www.info-coronavirus.be/fr/news/">info-coronavirus.be</a> and <a href="https://epidemio.wiv-isp.be/ID/Pages/2019-nCoV_epidemiological_situation.aspx">sciensano</a>)
+          (data source : <a href="https://epidemio.wiv-isp.be/ID/Pages/2019-nCoV_epidemiological_situation.aspx">sciensano</a>)
           <br /> written by 
           <a href="https://github.com/Tstassin/cov19"> tstassin</a>
         </footer>
