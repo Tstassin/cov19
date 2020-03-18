@@ -84,7 +84,7 @@ const IndexPage = ({ data }) => {
   return (
     <Layout>
       <SEO title="Home" />
-      <div className="section">
+      <div className="section container">
         <h2 className="title is-3 is-size-4-mobile">Covid19 Status</h2>
         <p className="subtitle is-5 is-size-6-mobile">updated {[...statusPerDay.datasets[0].data].pop().t}</p>
         <div className="field is-grouped is-grouped-multiline">
@@ -130,11 +130,10 @@ const IndexPage = ({ data }) => {
           </div>
         </div>
       </div>
-      <div className="section">
+      <div className="section container">
         <h2 className="title is-3 is-size-4-mobile">Status per day</h2>
         <p className="subtitle is-5 is-size-6-mobile">up to {[...statusPerDay.datasets[0].data].pop().t}</p>
         <Scatter data={statusPerDay} options={defaultOptions} redraw={true}></Scatter>
-        <br />
       </div>
     </Layout>
   )
