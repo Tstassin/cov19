@@ -26,25 +26,33 @@ const Layout = ({ children }) => {
   return (
     <>
       <Header siteTitle={data.site.siteMetadata.title} />
-        <main>{children}</main>
-        <footer className="section">
-          <hr />
-          <p>
-            {data.site.siteMetadata.description}
-          </p>
-          <hr />
-          © {new Date().getFullYear()}
-          <br /> built with
+      <main>{children}</main>
+      <footer className="section">
+        <hr />
+        <p>
+          {data.site.siteMetadata.description}
+        </p>
+        <hr />
+        © {new Date().getFullYear()}
+        <br /> built with
           {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>, 
+        <a href="https://www.gatsbyjs.org">Gatsby</a>,
           <a href="https://www.chartjs.org"> Chart.js</a>,
           <a href="https://bulma.io"> Bulma</a>
-          <br /> opendata from
-          <a href="https://github.com/eschnou/covid19-be"> eschnou/covid19-be </a> 
-          (data source : <a href="https://epidemio.wiv-isp.be/ID/Pages/2019-nCoV_epidemiological_situation.aspx">sciensano</a>)
-          <br /> written by 
+        <br /> opendata from :<br />
+        <ul>
+          <li>
+            &mdash;&nbsp;Belgium : <a href="https://github.com/eschnou/covid19-be"> eschnou/covid19-be </a>
+            (data source : <a href="https://epidemio.wiv-isp.be/ID/Pages/2019-nCoV_epidemiological_situation.aspx">sciensano</a>)
+          </li>
+          <li>
+            &mdash;&nbsp;Italy : <a href="https://github.com/pcm-dpc/COVID-19"> pcm-dpc/COVID-19 </a>
+            (data source : <a href="http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus">protezionecivile</a>)
+          </li>
+        </ul>
+        written by
           <a href="https://github.com/Tstassin/cov19"> tstassin</a>
-        </footer>
+      </footer>
     </>
   )
 }

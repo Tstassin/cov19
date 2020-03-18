@@ -14,8 +14,6 @@ const IndexPage = ({ data }) => {
   const danger = '#F14668'
   const info = 'hsl(204, 86%, 53%)'
 
-  const minimumValidDate = Date.parse("March 12 2020")
-
   const defaultOptions = {
     scales: {
       xAxes: [{
@@ -23,7 +21,6 @@ const IndexPage = ({ data }) => {
         time: {
           parser: 'DD/MM/YYYY',
           unit: 'day',
-          min: minimumValidDate,
         },
         offset: true,
       }]
@@ -34,47 +31,102 @@ const IndexPage = ({ data }) => {
     showLine: true,
   }
 
-  const dataSets = [
+  const dataBE = {
+    name: 'allCovid19DataBe',
+    dataDateName: 'date',
+  }
+  const dataITA = {
+    name: 'allCovid19DataIta',
+    dataDateName: 'data',
+    dataDateParse: true,
+  }
+
+  const dataSetBE = [
     {
       dataName: 'deceased',
       dataLabel: 'Deceased',
       dataColor: danger,
+      dataNode: dataBE,
     },
     {
       dataName: 'hospitalized',
       dataLabel: 'Hospitalized',
       dataColor: success,
-      type: 'bar'
+      type: 'bar',
+      dataNode: dataBE,
     },
     {
       dataName: 'icu',
       dataLabel: 'ICU',
       dataColor: warning,
-      type: 'bar'
+      type: 'bar',
+      dataNode: dataBE,
     },
     {
       dataName: 'released',
       dataLabel: 'Released',
       dataColor: info,
-      type: 'bar'
+      type: 'bar',
+      dataNode: dataBE,
+    },
+  ]
+
+  const dataSetITA = [
+    {
+      dataName: 'deceduti',
+      dataLabel: 'Deceduti',
+      dataColor: danger,
+      dataNode: dataITA,
+    },
+    {
+      dataName: 'totale_ospedalizzati',
+      dataLabel: 'Totale Ospedalizzati',
+      dataColor: success,
+      dataNode: dataITA,
+      type: 'bar',
+    },
+    {
+      dataName: 'terapia_intensiva',
+      dataLabel: 'Terapia Intensiva',
+      dataColor: warning,
+      dataNode: dataITA,
+      type: 'bar',
+    },
+    {
+      dataName: 'dimessi_guariti',
+      dataLabel: 'Dimessi Guariti',
+      dataColor: info,
+      dataNode: dataITA,
+      type: 'bar',
     },
   ]
 
 
-  const getDataPoints = (data, dataName) => data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: dataPoint.node[dataName] }))
+  const getDataPoints = (data, { name, dataDateParse, dataDateName }, dataName) => (
+    data[name].edges.map(({ node }) => (
+      { t: dataDateParse ? Date.parse(node[dataDateName]) : node[dataDateName], y: node[dataName] }
+    ))
+  )
 
-  const statusPerDay = {
-    datasets: dataSets.map(({ dataLabel, dataName, dataColor, type }) => ({
-      label: dataLabel,
-      dataName: dataName,
-      data: getDataPoints(data.allCovid19Data, dataName),
-      borderColor: dataColor,
-      type: type && type,
-      offset: true,
-      backgroundColor: type && type === 'bar' && dataColor,
-      ...defaultDataOptions
-    }))
-  }
+  const getChartJSDataset = (dataSet, data) => (
+    {
+      datasets: dataSet.map(({ dataLabel, dataName, dataColor, type, dataNode }) => (
+        {
+          label: dataLabel,
+          dataName: dataName,
+          data: getDataPoints(data, dataNode, dataName),
+          borderColor: dataColor,
+          type: type && type,
+          offset: true,
+          backgroundColor: type && type === 'bar' && dataColor,
+          ...defaultDataOptions
+        }
+      ))
+    }
+  )
+  const statusPerDay = getChartJSDataset(dataSetBE, data)
+
+  const statusPerDayITA = getChartJSDataset(dataSetITA, data)
 
   const datasetsIndex = {}
   statusPerDay.datasets.forEach((dataset, index) => datasetsIndex[dataset.dataName] = index)
@@ -135,9 +187,14 @@ const IndexPage = ({ data }) => {
         </div>
       </div>
       <div className="section container">
-        <h2 className="title is-3 is-size-4-mobile">Status per day</h2>
+        <h2 className="title is-3 is-size-4-mobile">Status per day in Belgium</h2>
         <p className="subtitle is-5 is-size-6-mobile">up to {[...statusPerDay.datasets[0].data].pop().t}</p>
         <Scatter data={statusPerDay} options={defaultOptions} redraw={true}></Scatter>
+      </div>
+      <div className="section container">
+        <h2 className="title is-3 is-size-4-mobile">Status per day in Italy (for reference)</h2>
+        <p className="subtitle is-5 is-size-6-mobile">up to {new Date([...statusPerDayITA.datasets[0].data].pop().t).toDateString()}</p>
+        <Scatter data={statusPerDayITA} options={defaultOptions} redraw={true}></Scatter>
       </div>
     </Layout>
   )
@@ -147,7 +204,7 @@ export default IndexPage
 
 export const query = graphql`
 query MyQuery {
-          allCovid19Data {
+          allCovid19DataBe {
           edges {
           node {
           cumul_cases
@@ -159,6 +216,23 @@ query MyQuery {
       deceased
       hospitalized
       released
+    }
+  }
+}
+allCovid19DataIta {
+  edges {
+    node {
+      deceduti
+      dimessi_guariti
+      isolamento_domiciliare
+      nuovi_attualmente_positivi
+      ricoverati_con_sintomi
+      tamponi
+      terapia_intensiva
+      totale_attualmente_positivi
+      totale_casi
+      totale_ospedalizzati
+      data
     }
   }
 }
