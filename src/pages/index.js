@@ -75,7 +75,7 @@ const IndexPage = ({ data }) => {
 
   const datasetsIndex = {}
   statusPerDay.datasets.forEach((dataset, index) => datasetsIndex[dataset.dataName] = index)
-  
+
   const getProgression = (data) => {
     const progressionRatio = (data[data.length - 1].y - data[data.length - 2].y) / data[data.length - 1].y
     const percentage = Math.round(progressionRatio * 100)
@@ -91,9 +91,8 @@ const IndexPage = ({ data }) => {
         <div class="field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-success has-text-weight-semibold">
+              <span class="tag is-success has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people receiving medical care in hospitals on given day">
                 Hospitalized
-                <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[datasetsIndex['hospitalized']].data].pop().t}</span>
               </span>
               <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['hospitalized']].data].pop().y}
                 <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['hospitalized']].data)}</span>
@@ -102,22 +101,18 @@ const IndexPage = ({ data }) => {
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-warning has-text-weight-semibold">
+              <span class="tag is-warning has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people receiving medical care in Intensive Care Units on given day">
                 ICU
-                <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[datasetsIndex['icu']].data].pop().t}</span></span>
+                </span>
               <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['icu']].data].pop().y}
                 <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['icu']].data)}</span>
               </span>
             </div>
           </div>
-        </div>
-        <div class="field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-info has-text-weight-semibold">
-              Released
-              <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[datasetsIndex['released']].data].pop().t}</span>
-
+              <span class="tag is-info has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people officially cured of Covid-19 after being hospitalized up to given day">
+                Released
               </span>
               <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['released']].data].pop().y}
                 <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['released']].data)}</span>
@@ -126,12 +121,11 @@ const IndexPage = ({ data }) => {
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-danger has-text-weight-semibold">
-              Deceased
-              <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;TOTAL</span>
+              <span class="tag is-danger has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Total number of people officially deceased with Covid-19 up to given day">
+                Deceased
               </span>
               <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['deceased']].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;total</span>
+                <span class="tags are-small is-size-7">&nbsp;TOTAL</span>
               </span>
             </div>
           </div>
@@ -142,13 +136,6 @@ const IndexPage = ({ data }) => {
         <p className="subtitle is-5 is-size-6-mobile">up to {[...statusPerDay.datasets[0].data].pop().t}</p>
         <Scatter data={statusPerDay} options={defaultOptions} redraw={true}></Scatter>
         <br />
-        <h3 className="title is-5">Legend</h3>
-        <ul>
-          <li><span className="tag is-success">&nbsp;</span> <b>Hospitalized (daily count)</b> : # people receiving medical care in hospitals on given day</li>
-          <li><span className="tag is-warning">&nbsp;</span> <b>ICU (daily count)</b> : # people receiving medical care in Intensive Care Units on given day</li>
-          <li><span className="tag is-danger">&nbsp;</span> <b>Deceased (total)</b> : # people officially deceased with Covid-19 up to given day</li>
-          <li><span className="tag is-info">&nbsp;</span> <b>Released (total)</b> : # people officially cured of Covid-19 after being hospitalized up to given day</li>
-        </ul>
       </div>
     </Layout>
   )
@@ -158,10 +145,10 @@ export default IndexPage
 
 export const query = graphql`
 query MyQuery {
-        allCovid19Data {
-        edges {
-        node {
-        cumul_cases
+          allCovid19Data {
+          edges {
+          node {
+          cumul_cases
         cumul_tests
       daily_cases
       daily_tests
