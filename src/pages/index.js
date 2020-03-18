@@ -3,7 +3,6 @@ import { graphql } from "gatsby"
 import { Scatter } from "react-chartjs-2"
 
 import Layout from "../components/layout"
-import Image from "../components/image"
 import SEO from "../components/seo"
 
 import "./mystyles.scss"
@@ -88,44 +87,44 @@ const IndexPage = ({ data }) => {
       <div className="section">
         <h2 className="title is-3 is-size-4-mobile">Covid19 Status</h2>
         <p className="subtitle is-5 is-size-6-mobile">updated {[...statusPerDay.datasets[0].data].pop().t}</p>
-        <div class="field is-grouped is-grouped-multiline">
-          <div class="control">
-            <div class="tags are-medium has-addons">
-              <span class="tag is-success has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people receiving medical care in hospitals on given day">
+        <div className="field is-grouped is-grouped-multiline">
+          <div className="control">
+            <div className="tags are-medium has-addons">
+              <span className="tag is-success has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people receiving medical care in hospitals on given day">
                 Hospitalized
               </span>
-              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['hospitalized']].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['hospitalized']].data)}</span>
+              <span className="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['hospitalized']].data].pop().y}
+                <span className="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['hospitalized']].data)}</span>
               </span>
             </div>
           </div>
-          <div class="control">
-            <div class="tags are-medium has-addons">
-              <span class="tag is-warning has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people receiving medical care in Intensive Care Units on given day">
+          <div className="control">
+            <div className="tags are-medium has-addons">
+              <span className="tag is-warning has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people receiving medical care in Intensive Care Units on given day">
                 ICU
                 </span>
-              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['icu']].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['icu']].data)}</span>
+              <span className="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['icu']].data].pop().y}
+                <span className="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['icu']].data)}</span>
               </span>
             </div>
           </div>
-          <div class="control">
-            <div class="tags are-medium has-addons">
-              <span class="tag is-info has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people officially cured of Covid-19 after being hospitalized up to given day">
+          <div className="control">
+            <div className="tags are-medium has-addons">
+              <span className="tag is-info has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people officially cured of Covid-19 after being hospitalized up to given day">
                 Released
               </span>
-              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['released']].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['released']].data)}</span>
+              <span className="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['released']].data].pop().y}
+                <span className="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['released']].data)}</span>
               </span>
             </div>
           </div>
-          <div class="control">
-            <div class="tags are-medium has-addons">
-              <span class="tag is-danger has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Total number of people officially deceased with Covid-19 up to given day">
+          <div className="control">
+            <div className="tags are-medium has-addons">
+              <span className="tag is-danger has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Total number of people officially deceased with Covid-19 up to given day">
                 Deceased
               </span>
-              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['deceased']].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;TOTAL</span>
+              <span className="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['deceased']].data].pop().y}
+                <span className="tags are-small is-size-7">&nbsp;TOTAL</span>
               </span>
             </div>
           </div>
