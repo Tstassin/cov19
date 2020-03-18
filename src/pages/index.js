@@ -34,19 +34,20 @@ const IndexPage = ({ data }) => {
 
   const dataSets = [
     {
+      dataName: 'deceased',
+      dataLabel: 'Deceased',
+      dataColor: danger,
+    },
+    {
       dataName: 'hospitalized',
       dataLabel: 'Hospitalized',
-      dataColor: success
+      dataColor: success,
+      type: 'bar'
     },
     {
       dataName: 'icu',
       dataLabel: 'ICU',
-      dataColor: warning
-    },
-    {
-      dataName: 'deceased',
-      dataLabel: 'Deceased',
-      dataColor: danger,
+      dataColor: warning,
       type: 'bar'
     },
     {
@@ -62,6 +63,7 @@ const IndexPage = ({ data }) => {
   const statusPerDay = {
     datasets: dataSets.map(({ dataLabel, dataName, dataColor, type }) => ({
       label: dataLabel,
+      dataName: dataName,
       data: getDataPoints(data.allCovid19Data, dataName),
       borderColor: dataColor,
       type: type && type,
@@ -71,12 +73,14 @@ const IndexPage = ({ data }) => {
     }))
   }
 
+  const datasetsIndex = {}
+  statusPerDay.datasets.forEach((dataset, index) => datasetsIndex[dataset.dataName] = index)
+  
   const getProgression = (data) => {
     const progressionRatio = (data[data.length - 1].y - data[data.length - 2].y) / data[data.length - 1].y
     const percentage = Math.round(progressionRatio * 100)
     return ((percentage > 0) && "+") + percentage + "%"
   }
-
 
   return (
     <Layout>
@@ -89,10 +93,10 @@ const IndexPage = ({ data }) => {
             <div class="tags are-medium has-addons">
               <span class="tag is-success has-text-weight-semibold">
                 Hospitalized
-                <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[0].data].pop().t}</span>
+                <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[datasetsIndex['hospitalized']].data].pop().t}</span>
               </span>
-              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[0].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[0].data)}</span>
+              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['hospitalized']].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['hospitalized']].data)}</span>
               </span>
             </div>
           </div>
@@ -100,9 +104,9 @@ const IndexPage = ({ data }) => {
             <div class="tags are-medium has-addons">
               <span class="tag is-warning has-text-weight-semibold">
                 ICU
-                <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[1].data].pop().t}</span></span>
-              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[1].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[1].data)}</span>
+                <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[datasetsIndex['icu']].data].pop().t}</span></span>
+              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['icu']].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['icu']].data)}</span>
               </span>
             </div>
           </div>
@@ -110,23 +114,23 @@ const IndexPage = ({ data }) => {
         <div class="field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-danger has-text-weight-semibold">
-              Deceased
-              <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;TOTAL</span>
+              <span class="tag is-info has-text-weight-semibold">
+              Released
+              <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;{[...statusPerDay.datasets[datasetsIndex['released']].data].pop().t}</span>
+
               </span>
-              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[2].data].pop().y}
-                <span class="tags are-small is-size-7">&nbsp;total</span>
+              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['released']].data].pop().y}
+                <span class="tags are-small is-size-7">&nbsp;{getProgression(statusPerDay.datasets[datasetsIndex['released']].data)}</span>
               </span>
             </div>
           </div>
           <div class="control">
             <div class="tags are-medium has-addons">
-              <span class="tag is-info has-text-weight-semibold">
-              Released
+              <span class="tag is-danger has-text-weight-semibold">
+              Deceased
               <span class="tags are-small is-size-7 has-text-weight-normal">&nbsp;TOTAL</span>
-
               </span>
-              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[3].data].pop().y}
+              <span class="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['deceased']].data].pop().y}
                 <span class="tags are-small is-size-7">&nbsp;total</span>
               </span>
             </div>
