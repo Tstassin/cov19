@@ -14,13 +14,16 @@ const IndexPage = ({ data }) => {
   const danger = '#F14668'
   const info = 'hsl(204, 86%, 53%)'
 
+  const minimumValidDate = Date.parse("March 12 2020")
+
   const defaultOptions = {
     scales: {
       xAxes: [{
         type: 'time',
         time: {
           parser: 'DD/MM/YYYY',
-          unit: 'day'
+          unit: 'day',
+          min: minimumValidDate,
         },
         offset: true,
       }]
@@ -56,6 +59,7 @@ const IndexPage = ({ data }) => {
       type: 'bar'
     },
   ]
+
 
   const getDataPoints = (data, dataName) => data.edges.map(dataPoint => ({ t: dataPoint.node.date, y: dataPoint.node[dataName] }))
 
@@ -110,7 +114,7 @@ const IndexPage = ({ data }) => {
           </div>
           <div className="control">
             <div className="tags are-medium has-addons">
-              <span className="tag is-info has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people officially cured of Covid-19 after being hospitalized up to given day">
+              <span className="tag is-info has-text-weight-semibold has-tooltip-multiline has-tooltip-right" data-tooltip="Number of people officially cured of Covid-19 after being hospitalized on given day">
                 Released
               </span>
               <span className="tag has-text-weight-bold">{[...statusPerDay.datasets[datasetsIndex['released']].data].pop().y}
