@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: `Covid19 Status in Belgium`,
+    title: `Covid-19 Status in Belgium`,
     description: `Charting relevant Covid19 data in Belgium to help people further understand the situation and raise awareness`,
     author: `@tstassin`,
   },
@@ -25,7 +25,7 @@ module.exports = {
         background_color: `#663399`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `src/images/cov19-favicon.png`, // This path is relative to the root of the site.
+        icon: `static/cov19-favicon.png`, // This path is relative to the root of the site.
       },
     },
     {

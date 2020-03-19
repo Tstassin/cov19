@@ -146,9 +146,9 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout>
-      <SEO title="Home" />
+      <SEO title={"Covid-19 Status in Belgium : " + [...statusPerDay.datasets[0].data].pop().t} />
       <div className="section container">
-        <h2 className="title is-3 is-size-4-mobile">Covid19 Status</h2>
+        <h2 className="title is-3 is-size-4-mobile">Covid-19 Status</h2>
         <p className="subtitle is-5 is-size-6-mobile">updated {[...statusPerDay.datasets[0].data].pop().t}</p>
         <div className="field is-grouped is-grouped-multiline">
           <div className="control">
