@@ -71,6 +71,10 @@ function SEO({ description, lang, meta, title }) {
           name: `og:image`,
           content: '/cov19-favicon.png',
         },
+        {
+          name: `twitter:image`,
+          content: '/cov19-favicon.png',
+        },
       ].concat(meta)}
     />
   )
