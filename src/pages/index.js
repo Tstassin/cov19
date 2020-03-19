@@ -139,7 +139,7 @@ const IndexPage = ({ data }) => {
   statusPerDay.datasets.forEach((dataset, index) => datasetsIndex[dataset.dataName] = index)
 
   const getProgression = (data) => {
-    const progressionRatio = (data[data.length - 1].y - data[data.length - 2].y) / data[data.length - 1].y
+    const progressionRatio = (data[data.length - 1].y - data[data.length - 2].y) / data[data.length - 2].y
     const percentage = Math.round(progressionRatio * 100)
     return ((percentage > 0) && "+") + percentage + "%"
   }
