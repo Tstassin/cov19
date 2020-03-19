@@ -1,6 +1,7 @@
 import React from "react"
 import { graphql } from "gatsby"
 import { Scatter } from "react-chartjs-2"
+import moment from 'moment'
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
@@ -14,13 +15,15 @@ const IndexPage = ({ data }) => {
   const danger = '#F14668'
   const info = 'hsl(204, 86%, 53%)'
 
+  const dateStandardOutputFormat = 'MMMM DD, YYYY'
+
   const defaultOptions = {
     scales: {
       xAxes: [{
         type: 'time',
         time: {
-          parser: 'DD/MM/YYYY',
           unit: 'day',
+          parser: dateStandardOutputFormat,
         },
         offset: true,
       }]
@@ -34,11 +37,12 @@ const IndexPage = ({ data }) => {
   const dataBE = {
     name: 'allCovid19DataBe',
     dataDateName: 'date',
+    dataDateFormat: "DD/MM/YYYY",
   }
   const dataITA = {
     name: 'allCovid19DataIta',
     dataDateName: 'data',
-    dataDateParse: true,
+    dataDateFormat: "YYYY-MM-DD HH:mm:ss",
   }
 
   const dataSetBE = [
@@ -102,9 +106,12 @@ const IndexPage = ({ data }) => {
   ]
 
 
-  const getDataPoints = (data, { name, dataDateParse, dataDateName }, dataName) => (
+  const getDataPoints = (data, { name, dataDateName, dataDateFormat }, dataName) => (
     data[name].edges.map(({ node }) => (
-      { t: dataDateParse ? Date.parse(node[dataDateName]) : node[dataDateName], y: node[dataName] }
+      { 
+        t: moment(node[dataDateName], dataDateFormat).format(dateStandardOutputFormat), 
+        y: node[dataName] 
+      }
     ))
   )
 
@@ -193,8 +200,8 @@ const IndexPage = ({ data }) => {
       </div>
       <div className="section container">
         <h2 className="title is-3 is-size-4-mobile">Status per day in Italy (for reference)</h2>
-        <p className="subtitle is-5 is-size-6-mobile">up to {new Date([...statusPerDayITA.datasets[0].data].pop().t).toDateString()}</p>
-        <Scatter data={statusPerDayITA} options={defaultOptions} redraw={true}></Scatter>
+        <p className="subtitle is-5 is-size-6-mobile">up to {[...statusPerDayITA.datasets[0].data].pop().t}</p>
+        <Scatter data={statusPerDayITA} options={defaultOptions}></Scatter>
       </div>
     </Layout>
   )
