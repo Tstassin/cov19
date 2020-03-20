@@ -1,11 +1,31 @@
 import React from 'react'
 import { Scatter } from 'react-chartjs-2'
+import * as ChartAnnotation from "chartjs-plugin-annotation"
+
+import { merge } from "lodash"
 
 const dateStandardOutputFormat = 'MMMM DD, YYYY'
 
 const minimumValidDate = 'March 1, 2020'
 
+const defaultAnnotationOptions = {
+    type: 'line',
+    mode: 'vertical',
+    scaleID: 'x-axis-1',
+    value: "March 18, 2020",
+    borderColor: ' hsl(0, 0%, 31%) ',
+    borderWidth: 2,
+    label: {
+        enabled: true,
+        content: 'content',
+        position: 'top',
+        yAdjust: 30,
+        backgroundColor: ' hsl(0, 0%, 31%) ',
+    }
+}
+
 const defaultOptions = {
+
     scales: {
         xAxes: [{
             type: 'time',
@@ -16,7 +36,7 @@ const defaultOptions = {
             offset: true,
             ticks: {
                 min: minimumValidDate
-            }
+            },
         }],
     },
     legend: {
@@ -25,12 +45,11 @@ const defaultOptions = {
     tooltips: {
         mode: 'index',
         intersect: false,
-
         callbacks: {
             title: (t, o) => t[0].xLabel,
             label: (t, o) => (
                 " " + o.datasets[t.datasetIndex].label + " : " +
-                o.datasets[t.datasetIndex].data[t.index].y + " " +
+                (o.datasets[t.datasetIndex].data[t.index].y || "0") + " " +
                 "(" + getProgression(o.datasets[t.datasetIndex].data.slice(0, t.index + 1)) + ")"
             ),
         }
@@ -38,7 +57,7 @@ const defaultOptions = {
     hover: {
         mode: 'index',
         intersect: false
-    }
+    },
 }
 
 const getProgression = (data) => {
@@ -76,14 +95,19 @@ const DataCards = ({ dataset }) => {
     )
 }
 
-const DataChart = ({ title, dataset, noDataCards }) => {
+const DataChart = ({ title, dataset, noDataCards, events }) => {
+    let annotations = {}
+    if (events) {
+        annotations = {annotation: { annotations:  events.map( (event, index) => merge({}, defaultAnnotationOptions, {label: {yAdjust: (defaultAnnotationOptions.label.yAdjust * index) + 10}}, event))}}
+    }
+
     return (
         <div className="section container">
             <h2 className="title is-3 is-size-4-mobile">{title}</h2>
             <p className="subtitle is-5 is-size-6-mobile">Last update {[...dataset.datasets[0].data].pop().t}</p>
             {!noDataCards && <DataCards dataset={dataset.datasets}></DataCards>}
             <br />
-            <Scatter data={dataset} options={defaultOptions} redraw={true} datasetKeyProvider={() => title}></Scatter>
+            <Scatter data={dataset} options={{...defaultOptions, ...annotations}} plugins={[ChartAnnotation]}></Scatter>
         </div>
     )
 }

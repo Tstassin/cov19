@@ -16,11 +16,37 @@ const IndexPage = ({ data }) => {
     dataDateName: 'date',
     dataDateFormat: "DD/MM/YYYY",
   }
+
   const dataITA = {
     name: 'allCovid19DataIta',
     dataDateName: 'data',
     dataDateFormat: "YYYY-MM-DD HH:mm:ss",
   }
+
+  const eventsBE = [{
+    value: 'March 14, 2020',
+    label: {
+      content: 'Belgium : restrictive measures',
+    }
+  },
+  {
+    value: 'March 18, 2020',
+    label: {
+      content: 'Belgium : lockdown',
+    }
+  }]
+
+  const eventsITA = [{
+    value: 'March 8, 2020',
+    label: {
+      content: 'Italy : north lockdown',
+    }
+  }, {
+    value: 'March 10, 2020',
+    label: {
+      content: 'Italy : nationwide lockdown',
+    }
+  },]
 
   const legends = {
     hospitalized: "Number of people receiving medical care in hospitals on given day",
@@ -100,16 +126,15 @@ const IndexPage = ({ data }) => {
   const statusPerDay = getChartJSDataset(dataSetBE, data)
   const statusPerDayITA = getChartJSDataset(dataSetITA, data)
 
-  const dataSetITA_greyed = dataSetITA.map( dataset => ({...dataset, dataColor: {value: "#ccc"}}))
+  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, dataColor: { value: "#ccc" } }))
 
 
   return (
     <Layout>
       <SEO title={"Covid-19 Status in Belgium : " + [...statusPerDay.datasets[0].data].pop().t} />
-      <DataChart title="Status per day in Belgium" dataset={statusPerDay}>
-      </DataChart>
-      <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA}></DataChart>
-      <DataChart title="Status per day in Belgium (with ghost Italy data)" noDataCards={true} dataset={getChartJSDataset([...dataSetBE, ...dataSetITA_greyed], data)}></DataChart>
+      <DataChart title="Status per day in Belgium" dataset={statusPerDay} events={eventsBE}></DataChart>
+      <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA} events={eventsITA}></DataChart>
+      <DataChart title="Status per day in Belgium (with ghost Italy data)" noDataCards={true} events={[...eventsBE, ...eventsITA]} dataset={getChartJSDataset([...dataSetBE, ...dataSetITA_greyed], data)}></DataChart>
     </Layout>
   )
 }
