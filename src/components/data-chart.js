@@ -15,18 +15,40 @@ const defaultOptions = {
             },
             offset: true,
             ticks: {
-
                 min: minimumValidDate
             }
         }],
     },
     legend: {
         position: 'bottom'
+    },
+    tooltips: {
+        mode: 'index',
+        intersect: false,
+
+        callbacks: {
+            title: (t, o) => t[0].xLabel,
+            label: (t, o) => (
+                " " + o.datasets[t.datasetIndex].label + " : " +
+                o.datasets[t.datasetIndex].data[t.index].y + " " +
+                "(" + getProgression(o.datasets[t.datasetIndex].data.slice(0, t.index + 1)) + ")"
+            ),
+        }
+    },
+    hover: {
+        mode: 'index',
+        intersect: false
     }
 }
 
 const getProgression = (data) => {
-    const progressionRatio = (data[data.length - 1].y - data[data.length - 2].y) / data[data.length - 2].y
+    let today
+    let yesterday
+    if (data.length > 0) today = data[data.length - 1].y
+    if (data.length > 1) yesterday = data[data.length - 2].y
+    if (!today) today = 1
+    if (!yesterday) yesterday = 1
+    const progressionRatio = (today - yesterday) / yesterday
     const percentage = Math.round(progressionRatio * 100)
     return ((percentage > 0) && "+") + percentage + "%"
 }
