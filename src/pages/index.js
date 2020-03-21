@@ -54,6 +54,7 @@ const IndexPage = ({ data }) => {
     hospitalized: "Number of people receiving medical care in hospitals on given day",
     icu: "Number of people receiving medical care in Intensive Care Units on given day",
     released: "Number of people officially cured of Covid-19 after being hospitalized on given day",
+    released_total: "Total number of people officially cured of Covid-19 after being hospitalized up to given day",
     deceased: "Total number of people officially deceased with Covid-19 up to given day",
   }
 
@@ -113,8 +114,7 @@ const IndexPage = ({ data }) => {
       dataLabel: 'Dimessi Guariti',
       dataColor: colors.info,
       dataNode: dataITA,
-      type: 'bar',
-      legend: legends.released,
+      legend: legends.released_total,
     },
     {
       dataName: 'deceduti',
