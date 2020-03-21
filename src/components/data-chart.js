@@ -46,10 +46,10 @@ const defaultOptions = {
         mode: 'index',
         intersect: false,
         callbacks: {
-            title: (t, o) => t[0].xLabel,
+            title: (t, o) => (t[0].xLabel) + (o.subtitle ? ("\n" + o.subtitle) : ""),
             label: (t, o) => (
                 " " + o.datasets[t.datasetIndex].label + " : " +
-                (o.datasets[t.datasetIndex].data[t.index].y || "0") + " " +
+                (Math.round(o.datasets[t.datasetIndex].data[t.index].y*100)/100 || "0") + " " +
                 "(" + getProgression(o.datasets[t.datasetIndex].data.slice(0, t.index + 1)) + ")"
             ),
         }
@@ -95,7 +95,7 @@ const DataCards = ({ dataset }) => {
     )
 }
 
-const DataChart = ({ title, dataset, noDataCards, events }) => {
+const DataChart = ({ title, dataset, noDataCards, events, subtitle }) => {
     let annotations = {}
     if (events) {
         annotations = {annotation: { annotations:  events.map( (event, index) => merge({}, defaultAnnotationOptions, {label: {yAdjust: (defaultAnnotationOptions.label.yAdjust * index) + 10}}, event))}}
@@ -104,10 +104,13 @@ const DataChart = ({ title, dataset, noDataCards, events }) => {
     return (
         <div className="section container">
             <h2 className="title is-3 is-size-4-mobile">{title}</h2>
-            <p className="subtitle is-5 is-size-6-mobile">Last update {[...dataset.datasets[0].data].pop().t}</p>
+            <p className="subtitle is-5 is-size-6-mobile">
+            Last update {[...dataset.datasets[0].data].pop().t}
+            {subtitle && <span> / {subtitle} </span>}
+            </p>
             {!noDataCards && <DataCards dataset={dataset.datasets}></DataCards>}
             <br />
-            <Scatter data={dataset} options={{...defaultOptions, ...annotations}} plugins={[ChartAnnotation]}></Scatter>
+            <Scatter data={{...dataset, subtitle}} options={{...defaultOptions, ...annotations}} plugins={[ChartAnnotation]}></Scatter>
         </div>
     )
 }

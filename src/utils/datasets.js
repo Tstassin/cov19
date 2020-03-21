@@ -7,22 +7,29 @@ const defaultDataOptions = {
 }
 
 
-const getDataPoints = (data, { name, dataDateName, dataDateFormat }, dataName) => (
-    data[name].edges.map(({ node }) => (
-        {
-            t: moment(node[dataDateName], dataDateFormat).format(dateStandardOutputFormat),
-            y: node[dataName]
+const getDataPoints = (data, { name, dataDateName, dataDateFormat, ...rest }, dataName, normalizer) => (
+    data[name].edges.map(({ node }) => {
+        let normalizerResult
+        if (normalizer) {
+            normalizerResult = normalizer(node[dataName], rest)
         }
-    ))
+        return (
+            {
+                t: moment(node[dataDateName], dataDateFormat).format(dateStandardOutputFormat),
+                y: normalizerResult ? normalizerResult.normalized : node[dataName],
+                y_original: normalizerResult ? normalizerResult.original : node[dataName],
+            }
+        )
+    })
 )
 
-const getChartJSDataset = (dataSet, data) => (
+const getChartJSDataset = (dataSet, data, normalizer) => (
     {
         datasets: dataSet.map(({ dataLabel, dataName, dataColor, type, dataNode, legend }) => (
             {
                 label: dataLabel,
                 dataName: dataName,
-                data: getDataPoints(data, dataNode, dataName),
+                data: getDataPoints(data, dataNode, dataName, normalizer),
                 dataColor: dataColor,
                 borderColor: dataColor.value,
                 type: type && type,

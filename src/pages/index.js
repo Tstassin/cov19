@@ -15,12 +15,14 @@ const IndexPage = ({ data }) => {
     name: 'allCovid19DataBe',
     dataDateName: 'date',
     dataDateFormat: "DD/MM/YYYY",
+    population: 11400000,
   }
 
   const dataITA = {
     name: 'allCovid19DataIta',
     dataDateName: 'data',
     dataDateFormat: "YYYY-MM-DD HH:mm:ss",
+    population: 60480000,
   }
 
   const eventsBE = [{
@@ -128,13 +130,25 @@ const IndexPage = ({ data }) => {
 
   const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, dataColor: { value: "#ccc" } }))
 
+  const normalizer = (value, params) => {
+    !value && (value = 0)
+    return { original: value, normalized: (value / params.population) * 100000 }
+  }
 
+  const normalized = getChartJSDataset([...dataSetBE, ...dataSetITA_greyed], data, normalizer)
+  
   return (
     <Layout>
       <SEO title={"Covid-19 Status in Belgium : " + [...statusPerDay.datasets[0].data].pop().t} />
       <DataChart title="Status per day in Belgium" dataset={statusPerDay} events={eventsBE}></DataChart>
       <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA} events={eventsITA}></DataChart>
-      <DataChart title="Status per day in Belgium (with ghost Italy data)" noDataCards={true} events={[...eventsBE, ...eventsITA]} dataset={getChartJSDataset([...dataSetBE, ...dataSetITA_greyed], data)}></DataChart>
+      <DataChart 
+      title="Status per day in Belgium (with ghost Italy data)"
+      subtitle="Data normalized per 100.000 citizens"
+      noDataCards={true} 
+      events={[...eventsBE, ...eventsITA]} 
+      dataset={normalized}
+      ></DataChart>
     </Layout>
   )
 }
