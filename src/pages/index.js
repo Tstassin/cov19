@@ -128,7 +128,7 @@ const IndexPage = ({ data }) => {
   const statusPerDay = getChartJSDataset(dataSetBE, data)
   const statusPerDayITA = getChartJSDataset(dataSetITA, data)
 
-  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, dataColor: { value: "#ccc" } }))
+  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
 
   const normalizer = (value, params) => {
     !value && (value = 0)
@@ -172,7 +172,7 @@ query MyQuery {
     }
   }
 }
-allCovid19DataIta {
+allCovid19DataIta(filter: {data: {gt: "2020-03-01"}}) {
   edges {
     node {
       deceduti
