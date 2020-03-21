@@ -35,7 +35,7 @@ module.exports = {
         // name the gatsby node
         name: 'covid19DataBE',
         // url for JSON endpoint
-        uri: 'https://raw.githubusercontent.com/tstassin/covid19-be/master/covid19-belgium.json',
+        uri: 'https://raw.githubusercontent.com/eschnou/covid19-be/master/covid19-belgium.json',
         // image location to process images. Default: "image.url"
         //image_location: "image.url",
         key: 'data'
