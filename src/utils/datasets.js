@@ -26,12 +26,12 @@ const getChartJSDataset = (dataSet, data, normalizer) => (
     {
         datasets: dataSet.map(({ dataLabel, dataName, dataColor, type, dataNode, legend, greyed }) => (
             {
-                borderColor: dataColor.value,
-                backgroundColor: type && type === 'bar' && (greyed ? '#ccc' : dataColor.value),
+                borderColor: greyed ? '#ccc' : dataColor.value,
+                backgroundColor: type && type === 'bar' ? (greyed ? '#ddd' : dataColor.value) : 'transparent',
                 dataName: dataName,
                 data: getDataPoints(data, dataNode, dataName, normalizer),
                 dataColor: dataColor,
-                hoverBackgroundColor: type && type === 'bar' && dataColor.value,
+                hoverBackgroundColor: dataColor.value,
                 label: dataLabel,
                 legend: legend,
                 offset: true,
