@@ -8,10 +8,15 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
+import Helmet from 'react-helmet'
 
 import Header from "./header"
+import { useStore } from "../store/store"
 
 const Layout = ({ children }) => {
+
+  const {toggleLogarithmicScale, setToggleLogarithmicScale} = useStore()
+
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -25,6 +30,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
+      <Helmet bodyAttributes={{ class: "has-navbar-fixed-bottom" }} />
       <Header siteTitle={data.site.siteMetadata.title} />
       <main>{children}</main>
       <footer className="section">
@@ -53,6 +59,24 @@ const Layout = ({ children }) => {
         written by
           <a href="https://github.com/Tstassin/cov19"> tstassin</a>
       </footer>
+
+      <nav class="navbar is-fixed-bottom is-transparent has-shadow" role="navigation" aria-label="dropdown navigation">
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            <div class="navbar-item has-dropdown has-dropdown-up is-hoverable">
+              <a class="navbar-link">
+                Options
+              </a>
+
+              <div class="navbar-dropdown">
+                <a class="navbar-item" onClick={() => setToggleLogarithmicScale(!toggleLogarithmicScale)}>
+                  {toggleLogarithmicScale ? "y-axis | linear scale" : "y-axis | logarithmic scale" }
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
     </>
   )
 }

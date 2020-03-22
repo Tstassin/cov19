@@ -6,7 +6,6 @@ const defaultDataOptions = {
     showLine: true,
 }
 
-
 const getDataPoints = (data, { name, dataDateName, dataDateFormat, ...rest }, dataName, normalizer) => (
     data[name].edges.map(({ node }) => {
         let normalizerResult
@@ -27,17 +26,17 @@ const getChartJSDataset = (dataSet, data, normalizer) => (
     {
         datasets: dataSet.map(({ dataLabel, dataName, dataColor, type, dataNode, legend, greyed }) => (
             {
-                label: dataLabel,
+                borderColor: dataColor.value,
+                backgroundColor: type && type === 'bar' && (greyed ? '#ccc' : dataColor.value),
                 dataName: dataName,
                 data: getDataPoints(data, dataNode, dataName, normalizer),
                 dataColor: dataColor,
-                borderColor: dataColor.value,
-                type: type && type,
-                offset: true,
-                backgroundColor: type && type === 'bar' && (greyed ? '#ccc' : dataColor.value),
                 hoverBackgroundColor: type && type === 'bar' && dataColor.value,
-                order: (type && type === 'bar') ? 2 : 1,
+                label: dataLabel,
                 legend: legend,
+                offset: true,
+                order: (type && type === 'bar') ? 2 : 1,
+                type: type && type,
                 ...defaultDataOptions
             }
         )),
