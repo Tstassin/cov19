@@ -14,14 +14,19 @@ const defaultAnnotationOptions = {
     mode: 'vertical',
     scaleID: 'x-axis-1',
     value: "March 18, 2020",
-    borderColor: ' hsl(0, 0%, 31%) ',
+    borderColor: ' rgba(0,0,0,0.1) ',
     borderWidth: 2,
     label: {
         enabled: true,
         content: 'content',
         position: 'top',
         yAdjust: 30,
-        backgroundColor: ' hsl(0, 0%, 31%) ',
+		backgroundColor: '#F5F5F5',
+		fontFamily: "sans-serif",
+		fontSize: 12,
+		fontStyle: "normal",
+        fontColor: "#000",
+        borderColor: 'red',
     }
 }
 
