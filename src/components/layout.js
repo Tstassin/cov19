@@ -13,6 +13,8 @@ import Helmet from 'react-helmet'
 import Header from "./header"
 import { useStore } from "../store/store"
 
+import logo from '../../static/cov19-favicon.png'
+
 const Layout = ({ children }) => {
 
   const store = useStore()
@@ -65,14 +67,18 @@ const Layout = ({ children }) => {
       <nav className="navbar is-fixed-bottom has-shadow" role="navigation" aria-label="dropdown navigation">
         <div class="navbar-brand">
 
-          <a role="button" class={"navbar-burger burger " + (mobileMenu ? "is-active" : "")}  aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={() =>setMobileMenu(!mobileMenu)}>
+          <a class="navbar-item" href="/">
+            <b>cov19.be</b>
+          </a>
+
+          <a role="button" class={"navbar-burger burger " + (mobileMenu ? "is-active" : "")} aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={() => setMobileMenu(!mobileMenu)}>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
           </a>
         </div>
         <div className={"navbar-menu " + (mobileMenu ? "is-active" : "")} >
-          <div className="navbar-start">
+          <div className="navbar-end">
             <a className="navbar-item" href="#">
               <div className="field">
                 <label htmlFor="setToggleLogarithmicScale" className="is-size-7">Linear&nbsp;&nbsp;</label>
