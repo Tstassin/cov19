@@ -7,8 +7,6 @@ import { useStore } from '../store/store'
 
 const dateStandardOutputFormat = 'MMMM DD, YYYY'
 
-const minimumValidDate = 'March 1, 2020'
-
 const defaultAnnotationOptions = {
     type: 'line',
     mode: 'vertical',
@@ -21,10 +19,10 @@ const defaultAnnotationOptions = {
         content: 'content',
         position: 'top',
         yAdjust: 30,
-		backgroundColor: '#F5F5F5',
-		fontFamily: "sans-serif",
-		fontSize: 12,
-		fontStyle: "normal",
+        backgroundColor: '#F5F5F5',
+        fontFamily: "sans-serif",
+        fontSize: 12,
+        fontStyle: "normal",
         fontColor: "#000",
         borderColor: 'red',
     }
@@ -67,9 +65,6 @@ const defaultOptions = {
                 parser: dateStandardOutputFormat,
             },
             offset: true,
-            ticks: {
-                min: minimumValidDate
-            },
         }],
     },
     legend: {
@@ -99,6 +94,7 @@ const getProgression = (data) => {
     if (data.length > 0) today = data[data.length - 1].y
     if (data.length > 1) yesterday = data[data.length - 2].y
     if (!today) today = 1
+    if (yesterday === undefined) return "+100%"
     if (!yesterday) yesterday = 1
     const progressionRatio = (today - yesterday) / yesterday
     const percentage = Math.round(progressionRatio * 100)
@@ -136,21 +132,27 @@ const DataCards = ({ dataset }) => {
     )
 }
 
-const DataChart = ({ title, dataset, noDataCards, events, subtitle }) => {
+const DataChart = ({ title, dataset, noDataCards, events, subtitle, isLinear }) => {
 
     const { toggleLogarithmicScale, _ } = useStore()
 
     let annotations = {}
     if (events) {
-        annotations = { annotation: { annotations: events.map((event, index) => merge({}, defaultAnnotationOptions, { label: { yAdjust: (defaultAnnotationOptions.label.yAdjust * index) + 10 } }, event)) } }
+        annotations = {
+            annotation: {
+                annotations: events.map(
+                    (event, index) => merge({}, defaultAnnotationOptions, { label: { yAdjust: (defaultAnnotationOptions.label.yAdjust * index) + 10 } }, event)
+                )
+            }
+        }
     }
 
     return (
         <div className="section container">
             <h2 className="title is-3 is-size-4-mobile">{title}</h2>
             <p className="subtitle is-5 is-size-6-mobile">
-                Last update {[...dataset.datasets[0].data].pop().t}
-                {subtitle && <span> / {subtitle} </span>}
+                Last update {[...dataset.datasets[0].data].pop().t}<br />
+                {subtitle && <span> {subtitle} </span>}
             </p>
             {!noDataCards && <DataCards dataset={dataset.datasets}></DataCards>}
             <br />
@@ -161,6 +163,15 @@ const DataChart = ({ title, dataset, noDataCards, events, subtitle }) => {
                     ...annotations,
                     scales: {
                         ...defaultOptions.scales,
+                        xAxes: [
+                            {
+                                ...defaultOptions.scales.xAxes[0],
+                                ticks: {
+                                    ...defaultOptions.scales.xAxes[0].time,
+                                    callback: isLinear ? (value, i, values) => ("Day " + (i + 1)) : undefined
+                                }
+                            }
+                        ],
                         yAxes: [
                             toggleLogarithmicScale
                                 ?

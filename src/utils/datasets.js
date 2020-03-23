@@ -1,45 +1,48 @@
 import moment from 'moment'
 
 const dateStandardOutputFormat = 'MMMM DD, YYYY'
+export {dateStandardOutputFormat}
 
 const defaultDataOptions = {
     showLine: true,
 }
 
-const getDataPoints = (data, { name, dataDateName, dataDateFormat, ...rest }, dataName, normalizer) => (
-    data[name].edges.map(({ node }) => {
-        let normalizerResult
-        if (normalizer) {
-            normalizerResult = normalizer(node[dataName], rest)
-        }
-        return (
-            {
+const getDataPoints = (data, dataNode, dataName, filter) => {
+    const { name, dataDateName, dataDateFormat, ...rest } = dataNode
+    return (
+        data[name].edges.map(({ node }) => {
+            const dataPoint = {
                 t: moment(node[dataDateName], dataDateFormat).format(dateStandardOutputFormat),
-                y: normalizerResult ? normalizerResult.normalized : node[dataName],
-                y_original: normalizerResult ? normalizerResult.original : node[dataName],
+                y: node[dataName],
             }
-        )
-    })
-)
+            return filter(dataPoint, dataNode, dataName)
+        })
+    )
+}
 
-const getChartJSDataset = (dataSet, data, normalizer) => (
+const getChartJSDataset = (dataSet, data, filter_single = _ => _, filter_dataset = _ => _, filter_datasets = _ => _) => (
     {
-        datasets: dataSet.map(({ dataLabel, dataName, dataColor, type, dataNode, legend, greyed }) => (
-            {
-                borderColor: greyed ? '#ccc' : dataColor.value,
-                backgroundColor: type && type === 'bar' ? (greyed ? '#ddd' : dataColor.value) : 'transparent',
-                dataName: dataName,
-                data: getDataPoints(data, dataNode, dataName, normalizer),
-                dataColor: dataColor,
-                hoverBackgroundColor: dataColor.value,
-                label: dataLabel,
-                legend: legend,
-                offset: true,
-                order: (type && type === 'bar') ? 2 : 1,
-                type: type && type,
-                ...defaultDataOptions
-            }
-        )),
+        datasets: filter_datasets(
+            dataSet.map(
+                ({ dataLabel, dataName, dataColor, type, dataNode, legend, greyed }) => (
+                    {
+                        borderColor: greyed ? '#ccc' : dataColor.value,
+                        backgroundColor: type && type === 'bar' ? (greyed ? '#ddd' : dataColor.value) : 'transparent',
+                        dataName: dataName,
+                        dataNode: dataNode,
+                        data: filter_dataset(getDataPoints(data, dataNode, dataName, filter_single)),
+                        dataColor: dataColor,
+                        hoverBackgroundColor: dataColor.value,
+                        label: dataLabel,
+                        legend: legend,
+                        offset: true,
+                        order: (type && type === 'bar') ? 2 : 1,
+                        type: type && type,
+                        ...defaultDataOptions
+                    }
+                )
+            )
+        ),
         datasetsIndex: [...dataSet].reduce((current, item, index) => { current[item.dataName] = index; return current }, {})
     }
 )

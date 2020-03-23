@@ -60,20 +60,15 @@ const Layout = ({ children }) => {
           <a href="https://github.com/Tstassin/cov19"> tstassin</a>
       </footer>
 
-      <nav class="navbar is-fixed-bottom is-transparent has-shadow" role="navigation" aria-label="dropdown navigation">
+      <nav class="navbar is-fixed-bottom has-shadow" role="navigation" aria-label="dropdown navigation">
         <div class="navbar-menu">
           <div class="navbar-start">
-            <div class="navbar-item has-dropdown has-dropdown-up is-hoverable">
-              <a class="navbar-link">
-                Options
-              </a>
 
-              <div class="navbar-dropdown">
-                <a class="navbar-item" onClick={() => setToggleLogarithmicScale(!toggleLogarithmicScale)}>
-                  {toggleLogarithmicScale ? "y-axis | linear scale" : "y-axis | logarithmic scale" }
+      <div class="navbar-item">
+                <a class="button is-primary" onClick={() => setToggleLogarithmicScale(!toggleLogarithmicScale)}>
+                  {"Toggle " + (toggleLogarithmicScale ? "linear scale" : "logarithmic scale") }
                 </a>
-              </div>
-            </div>
+          </div>
           </div>
         </div>
       </nav>

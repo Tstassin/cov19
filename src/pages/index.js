@@ -1,11 +1,12 @@
 import React from "react"
 import { graphql } from "gatsby"
+import moment from 'moment'
 
 import colors from "../config/colors"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import DataChart from "../components/data-chart"
-import getChartJSDataset from "../utils/datasets"
+import getChartJSDataset, { dateStandardOutputFormat } from "../utils/datasets"
 
 import { StoreProvider, useStore } from '../store/store'
 
@@ -132,12 +133,39 @@ const IndexPage = ({ data }) => {
 
   const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
 
-  const normalizer = (value, params) => {
-    !value && (value = 0)
-    return { original: value, normalized: (value / params.population) * 100000 }
+  const normalize_y_axis_per_population = (dataPoint, dataNode, dataName) => (
+    {
+      ...dataPoint,
+      y_original: dataPoint.y,
+      y: (dataPoint.y / dataNode.population) * 100000
+    }
+  )
+
+  const normalize_x_axis_origin = (data) => {
+    const newOrigins = []
+
+    data.forEach((dataset, index) => {
+      if (dataset.dataName === 'deceased' || dataset.dataName === 'deceduti') {
+        newOrigins[dataset.dataNode.name] = dataset.data.findIndex(dataPoint => dataPoint.y_original >= 10)
+      }
+    })
+    let minMax = { min: data[0].data.length, max: data[0].data.length }
+
+    data.forEach((dataset, index) => {
+      dataset.data = [...dataset.data].splice(newOrigins[dataset.dataNode.name])
+      dataset.data = dataset.data.map((dataPoint, index) => ({ ...dataPoint, t: moment().add(index, 'days').format(dateStandardOutputFormat) }))
+      if (minMax.min > dataset.data.length) minMax.min = dataset.data.length
+      if (minMax.max < dataset.data.length) minMax.max = dataset.data.length
+    })
+
+    data.forEach((dataset, index) => dataset.data = [...dataset.data].splice(0, Math.min(minMax.min * 2 + 1, minMax.max)))
+
+    return data
   }
 
-  const normalized = getChartJSDataset([...dataSetBE, ...dataSetITA_greyed], data, normalizer)
+  const normalized = getChartJSDataset([...dataSetBE, ...dataSetITA_greyed], data, normalize_y_axis_per_population, _ => _, normalize_x_axis_origin)
+
+
 
   return (
     <StoreProvider>
@@ -147,10 +175,11 @@ const IndexPage = ({ data }) => {
         <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA} events={eventsITA}></DataChart>
         <DataChart
           title="Status per day in Belgium (with ghost Italy data)"
-          subtitle="Data normalized per 100.000 citizens"
+          subtitle="y-axis data normalized per 100.000 citizens, x-axis origin set to the day deceased total >= 10 people"
           noDataCards={true}
           events={[...eventsBE, ...eventsITA]}
           dataset={normalized}
+          isLinear={true}
         ></DataChart>
       </Layout>
     </StoreProvider>
@@ -176,7 +205,7 @@ query MyQuery {
     }
   }
 }
-allCovid19DataIta(filter: {data: {gt: "2020-03-01"}}) {
+allCovid19DataIta(filter: {deceduti: {gte: 10}}) {
   edges {
     node {
       deceduti
