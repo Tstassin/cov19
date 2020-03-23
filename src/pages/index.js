@@ -8,11 +8,13 @@ import SEO from "../components/seo"
 import DataChart from "../components/data-chart"
 import getChartJSDataset, { dateStandardOutputFormat } from "../utils/datasets"
 
-import { StoreProvider, useStore } from '../store/store'
+import { useStore } from '../store/store'
 
 import "./mystyles.scss"
 
 const IndexPage = ({ data }) => {
+
+  const store = useStore()
 
   const dataBE = {
     name: 'allCovid19DataBe',
@@ -128,11 +130,6 @@ const IndexPage = ({ data }) => {
     },
   ]
 
-  const statusPerDay = getChartJSDataset(dataSetBE, data)
-  const statusPerDayITA = getChartJSDataset(dataSetITA, data)
-
-  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
-
   const normalize_y_axis_per_population = (dataPoint, dataNode, dataName) => (
     {
       ...dataPoint,
@@ -153,7 +150,7 @@ const IndexPage = ({ data }) => {
 
     data.forEach((dataset, index) => {
       dataset.data = [...dataset.data].splice(newOrigins[dataset.dataNode.name])
-      dataset.data = dataset.data.map((dataPoint, index) => ({ ...dataPoint, t: moment().add(index, 'days').format(dateStandardOutputFormat) }))
+      dataset.data = dataset.data.map((dataPoint, index) => ({ ...dataPoint, t: moment(data[0].data[0].t).add(index, 'days').format(dateStandardOutputFormat) }))
       if (minMax.min > dataset.data.length) minMax.min = dataset.data.length
       if (minMax.max < dataset.data.length) minMax.max = dataset.data.length
     })
@@ -163,26 +160,65 @@ const IndexPage = ({ data }) => {
     return data
   }
 
-  const normalized = getChartJSDataset([...dataSetBE, ...dataSetITA_greyed], data, normalize_y_axis_per_population, _ => _, normalize_x_axis_origin)
+  const sameDatasetSize = (data) => {
+    const dataPointPrototype = {t: 0, y: "", y_original: ""}
 
+    let minDate = moment(data[0].data[0].t)
+    let maxDate = moment(data[0].data[0].t)
+    data.forEach(dataset => {
+      moment(dataset.data[0].t).isBefore(minDate) && (minDate = moment(dataset.data[0].t))
+      moment(dataset.data[dataset.data.length - 1].t).isAfter(maxDate) && (maxDate = moment(dataset.data[dataset.data.length - 1].t))
+    })
 
+    data.forEach(dataset => {
+      let currentDate = moment(dataset.data[0].t)
+      let diff = currentDate.diff(minDate, 'days')
+
+      let i = 1
+      while (i <= diff) {
+        dataset.data.unshift({...dataPointPrototype, t: currentDate.subtract(1, 'days').format(dateStandardOutputFormat)})
+        i++
+      }
+    })
+    
+    return data
+  }
+
+  const statusPerDay = getChartJSDataset(
+    dataSetBE, 
+    data,
+    store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
+    _ => _,
+    store.commonOrigin ? normalize_x_axis_origin : _ => _)
+
+  const statusPerDayITA = getChartJSDataset(dataSetITA, data,
+    store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
+    _ => _,
+    store.commonOrigin ? normalize_x_axis_origin : _ => _)
+
+  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
+
+  const normalized = getChartJSDataset(
+    [...dataSetBE, ...dataSetITA_greyed],
+    data,
+    store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
+    _ => _,
+    store.commonOrigin ? normalize_x_axis_origin : sameDatasetSize
+  )
 
   return (
-    <StoreProvider>
-      <Layout>
-        <SEO title={"Covid-19 Status in Belgium : " + [...statusPerDay.datasets[0].data].pop().t} />
-        <DataChart title="Status per day in Belgium" dataset={statusPerDay} events={eventsBE}></DataChart>
-        <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA} events={eventsITA}></DataChart>
-        <DataChart
-          title="Status per day in Belgium (with ghost Italy data)"
-          subtitle="y-axis data normalized per 100.000 citizens, x-axis origin set to the day deceased total >= 10 people"
-          noDataCards={true}
-          events={[...eventsBE, ...eventsITA]}
-          dataset={normalized}
-          isLinear={true}
-        ></DataChart>
-      </Layout>
-    </StoreProvider>
+    <Layout>
+      <SEO title={"Covid-19 Status in Belgium : " + [...statusPerDay.datasets[0].data].pop().t} />
+      <DataChart title="Status per day in Belgium" dataset={statusPerDay} events={eventsBE}></DataChart>
+      <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA} events={eventsITA}></DataChart>
+      <DataChart
+        title="Status per day in Belgium (with ghost Italy data)"
+        noDataCards={true}
+        events={[...eventsBE, ...eventsITA]}
+        dataset={normalized}
+        isLinear={true}
+      ></DataChart>
+    </Layout>
   )
 }
 

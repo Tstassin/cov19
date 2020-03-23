@@ -74,7 +74,7 @@ const defaultOptions = {
         mode: 'index',
         intersect: false,
         callbacks: {
-            title: (t, o) => (t[0].xLabel) + (o.subtitle ? ("\n" + o.subtitle) : ""),
+            title: (t, o) => (t[0].xLabel),
             label: (t, o) => (
                 " " + o.datasets[t.datasetIndex].label + " : " +
                 (Math.round(o.datasets[t.datasetIndex].data[t.index].y * 100) / 100 || "0") + " " +
@@ -120,7 +120,7 @@ const DataCards = ({ dataset }) => {
                                 <span className={"tag has-text-weight-semibold has-tooltip-multiline has-tooltip-right " + dataset.dataColor.className} data-tooltip={dataset.legend}>
                                     {dataset.label}
                                 </span>
-                                <span className="tag has-text-weight-bold">{[...dataset.data].pop().y}
+                                <span className="tag has-text-weight-bold">{[...dataset.data].pop().y_original}
                                     <span className="tags are-small is-size-7">&nbsp;{getProgression(dataset.data)}</span>
                                 </span>
                             </div>
@@ -132,9 +132,9 @@ const DataCards = ({ dataset }) => {
     )
 }
 
-const DataChart = ({ title, dataset, noDataCards, events, subtitle, isLinear }) => {
+const DataChart = ({ title, dataset, noDataCards, events, isLinear }) => {
 
-    const { toggleLogarithmicScale, _ } = useStore()
+    const store = useStore()
 
     let annotations = {}
     if (events) {
@@ -151,13 +151,12 @@ const DataChart = ({ title, dataset, noDataCards, events, subtitle, isLinear }) 
         <div className="section container">
             <h2 className="title is-3 is-size-4-mobile">{title}</h2>
             <p className="subtitle is-5 is-size-6-mobile">
-                Last update {[...dataset.datasets[0].data].pop().t}<br />
-                {subtitle && <span> {subtitle} </span>}
+                Last update {[...dataset.datasets[0].data].pop().t}
             </p>
             {!noDataCards && <DataCards dataset={dataset.datasets}></DataCards>}
             <br />
             <Scatter
-                data={{ ...dataset, subtitle }}
+                data={dataset}
                 options={{
                     ...defaultOptions,
                     ...annotations,
@@ -168,12 +167,12 @@ const DataChart = ({ title, dataset, noDataCards, events, subtitle, isLinear }) 
                                 ...defaultOptions.scales.xAxes[0],
                                 ticks: {
                                     ...defaultOptions.scales.xAxes[0].time,
-                                    callback: isLinear ? (value, i, values) => ("Day " + (i + 1)) : undefined
+                                    callback: (isLinear && store.commonOrigin) ? (value, i, values) => ("Day " + (i + 1)) : undefined
                                 }
                             }
                         ],
                         yAxes: [
-                            toggleLogarithmicScale
+                            store.toggleLogarithmicScale
                                 ?
                                 {
                                     ...yAxisScales.logarithmic,

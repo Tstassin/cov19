@@ -5,7 +5,7 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React from "react"
+import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 import Helmet from 'react-helmet'
@@ -15,7 +15,9 @@ import { useStore } from "../store/store"
 
 const Layout = ({ children }) => {
 
-  const { toggleLogarithmicScale, setToggleLogarithmicScale } = useStore()
+  const store = useStore()
+
+  const [mobileMenu, setMobileMenu] = useState(false)
 
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
@@ -60,15 +62,34 @@ const Layout = ({ children }) => {
           <a href="https://github.com/Tstassin/cov19"> tstassin</a>
       </footer>
 
-      <nav class="navbar is-fixed-bottom has-shadow" role="navigation" aria-label="dropdown navigation">
-        <div class="navbar-menu">
-          <div class="navbar-start">
+      <nav className="navbar is-fixed-bottom has-shadow" role="navigation" aria-label="dropdown navigation">
+        <div class="navbar-brand">
 
-            <a class="navbar-item">
-              <div class="field">
-                <label for="switchSmall" className="is-size-7">Linear&nbsp;&nbsp;</label>
-                <input id="switchSmall" type="checkbox" name="switchSmall" class="switch is-small"  onClick={() => setToggleLogarithmicScale(!toggleLogarithmicScale)}/>
-                <label for="switchSmall" className="is-size-7">Logarithmic</label>
+          <a role="button" class={"navbar-burger burger " + (mobileMenu ? "is-active" : "")}  aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={() =>setMobileMenu(!mobileMenu)}>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div className={"navbar-menu " + (mobileMenu ? "is-active" : "")} >
+          <div className="navbar-start">
+            <a className="navbar-item" href="#">
+              <div className="field">
+                <label htmlFor="setToggleLogarithmicScale" className="is-size-7">Linear&nbsp;&nbsp;</label>
+                <input id="setToggleLogarithmicScale" type="checkbox" name="setToggleLogarithmicScale" className="switch is-small is-thin" onClick={() => store.setToggleLogarithmicScale(!store.toggleLogarithmicScale)} />
+                <label htmlFor="setToggleLogarithmicScale" className="is-size-7">Logarithmic</label>
+              </div>
+            </a>
+            <a className="navbar-item" href="#">
+              <div className="field">
+                <input id="setNormalizePopulations" type="checkbox" name="setNormalizePopulations" className="switch is-outlined is-small" onClick={() => store.setNormalizePopulations(!store.normalizePopulations)} />
+                <label htmlFor="setNormalizePopulations">y-axis : normalize per 100.000 citizens</label>
+              </div>
+            </a>
+            <a className="navbar-item" href="#">
+              <div className="field">
+                <input id="setCommonOrigin" type="checkbox" name="setCommonOrigin" className="switch is-outlined is-small" onClick={() => store.setCommonOrigin(!store.commonOrigin)} />
+                <label htmlFor="setCommonOrigin">x-axis : origin set to <b className="has-text-danger">deceased</b> >= 10</label>
               </div>
             </a>
           </div>
