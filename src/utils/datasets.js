@@ -14,6 +14,7 @@ const getDataPoints = (data, dataNode, dataName, filter) => {
             const dataPoint = {
                 t: moment(node[dataDateName], dataDateFormat).format(dateStandardOutputFormat),
                 y: node[dataName],
+                y_original: node[dataName],
             }
             return filter(dataPoint, dataNode, dataName)
         })
