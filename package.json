@@ -6,6 +6,7 @@
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
     "bulma": "^0.8.0",
+    "bulma-switch": "^2.0.0",
     "bulma-tooltip": "^3.0.2",
     "chart.js": "^2.9.3",
     "chartjs-plugin-annotation": "^0.5.7",

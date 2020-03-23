@@ -15,7 +15,7 @@ import { useStore } from "../store/store"
 
 const Layout = ({ children }) => {
 
-  const {toggleLogarithmicScale, setToggleLogarithmicScale} = useStore()
+  const { toggleLogarithmicScale, setToggleLogarithmicScale } = useStore()
 
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
@@ -64,11 +64,13 @@ const Layout = ({ children }) => {
         <div class="navbar-menu">
           <div class="navbar-start">
 
-      <div class="navbar-item">
-                <a class="button is-primary" onClick={() => setToggleLogarithmicScale(!toggleLogarithmicScale)}>
-                  {"Toggle " + (toggleLogarithmicScale ? "linear scale" : "logarithmic scale") }
-                </a>
-          </div>
+            <a class="navbar-item">
+              <div class="field">
+                <label for="switchSmall" className="is-size-7">Linear&nbsp;&nbsp;</label>
+                <input id="switchSmall" type="checkbox" name="switchSmall" class="switch is-small"  onClick={() => setToggleLogarithmicScale(!toggleLogarithmicScale)}/>
+                <label for="switchSmall" className="is-size-7">Logarithmic</label>
+              </div>
+            </a>
           </div>
         </div>
       </nav>
