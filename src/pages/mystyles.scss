@@ -3,6 +3,14 @@
 
 $navbar-breakpoint: 820px;
 
+
 @import "~bulma/bulma.sass";
 @import "~bulma-tooltip/dist/css/bulma-tooltip.min.css";
-@import "~bulma-switch/dist/css/bulma-switch.min.css"
+@import "~bulma-switch/dist/css/bulma-switch.min.css";
+
+.is-responsive-chart {
+    @include until($tablet) {
+        height: 450px;
+    }
+    height: 600px;
+}
