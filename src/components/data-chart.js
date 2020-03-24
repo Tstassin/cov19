@@ -86,6 +86,8 @@ const defaultOptions = {
         mode: 'index',
         intersect: false
     },
+    maintainAspectRatio: false,
+    responsive: true,
 }
 
 const getProgression = (data) => {
@@ -155,45 +157,47 @@ const DataChart = ({ title, dataset, noDataCards, events, isLinear }) => {
             </p>
             {!noDataCards && <DataCards dataset={dataset.datasets}></DataCards>}
             <br />
-            <Scatter
-                data={dataset}
-                options={{
-                    ...defaultOptions,
-                    ...annotations,
-                    scales: {
-                        ...defaultOptions.scales,
-                        xAxes: [
-                            {
-                                ...defaultOptions.scales.xAxes[0],
-                                ticks: {
-                                    ...defaultOptions.scales.xAxes[0].time,
-                                    callback: (isLinear && store.commonOrigin) ? (value, i, values) => ("Day " + (i + 1)) : undefined
-                                }
-                            }
-                        ],
-                        yAxes: [
-                            store.toggleLogarithmicScale
-                                ?
+            <div className="is-responsive-chart"> 
+                <Scatter
+                    data={dataset}
+                    options={{
+                        ...defaultOptions,
+                        ...annotations,
+                        scales: {
+                            ...defaultOptions.scales,
+                            xAxes: [
                                 {
-                                    ...yAxisScales.logarithmic,
+                                    ...defaultOptions.scales.xAxes[0],
                                     ticks: {
-                                        ...yAxisScales.logarithmic.ticks,
-                                        max: getMax(dataset.datasets)
+                                        ...defaultOptions.scales.xAxes[0].time,
+                                        callback: (isLinear && store.commonOrigin) ? (value, i, values) => ("Day " + (i + 1)) : undefined
                                     }
                                 }
-                                :
-                                {
-                                    ...yAxisScales.linear,
-                                    ticks: {
-                                        ...yAxisScales.linear.ticks,
-                                        max: undefined,
+                            ],
+                            yAxes: [
+                                store.toggleLogarithmicScale
+                                    ?
+                                    {
+                                        ...yAxisScales.logarithmic,
+                                        ticks: {
+                                            ...yAxisScales.logarithmic.ticks,
+                                            max: getMax(dataset.datasets)
+                                        }
                                     }
-                                }
-                        ]
-                    }
-                }}
-                plugins={[ChartAnnotation]}
-            ></Scatter>
+                                    :
+                                    {
+                                        ...yAxisScales.linear,
+                                        ticks: {
+                                            ...yAxisScales.linear.ticks,
+                                            max: undefined,
+                                        }
+                                    }
+                            ]
+                        }
+                    }}
+                    plugins={[ChartAnnotation]}
+                ></Scatter>
+            </div>
         </div>
     )
 }
