@@ -1,0 +1,22 @@
+@charset "utf-8";
+// If need, change your variables before importing Bulma
+
+$navbar-breakpoint: 820px;
+
+
+@import "~bulma/bulma.sass";
+@import "~bulma-tooltip/dist/css/bulma-tooltip.min.css";
+@import "~bulma-switch/dist/css/bulma-switch.min.css";
+
+.is-responsive-chart {
+    @include until($widescreen) {
+        height: 550px;
+    }
+    @include until($desktop) {
+        height: 450px;
+    }
+    @include until($tablet) {
+        height: 350px;
+    }
+    height: 650px;
+}
