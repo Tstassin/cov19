@@ -43,12 +43,12 @@ const Layout = ({ children }) => {
           {data.site.siteMetadata.description}
         </p>
         <hr />
-        © {new Date().getFullYear()}
-        <br /> built with
-          {` `}
-        <a href="https://www.gatsbyjs.org">Gatsby</a>,
-          <a href="https://www.chartjs.org"> Chart.js</a>,
-          <a href="https://bulma.io"> Bulma</a>
+        © {new Date().getFullYear()} 
+        <br />
+        created by T. Stassin
+        <a href="mailto:tstassin@gmail.com"> mail</a> -
+        <a href="https://twitter.com/TStassin"> tweet</a> -
+        <a href="https://github.com/Tstassin/cov19"> git</a>
         <br /> opendata from :<br />
         <ul>
           <li>
@@ -60,8 +60,13 @@ const Layout = ({ children }) => {
             (data source : <a href="http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus">protezionecivile</a>)
           </li>
         </ul>
-        written by
-          <a href="https://github.com/Tstassin/cov19"> tstassin</a>
+        built using
+          {` `}
+        <a href="https://www.gatsbyjs.org">Gatsby</a>,
+          <a href="https://www.chartjs.org"> Chart.js</a>,
+          <a href="https://bulma.io"> Bulma</a>
+          <br />
+        I'm not a professional journalist, data scientist nor epidemiologist, this website is enthusiastic amateur work, for the greater good
       </footer>
 
       <nav className="navbar is-fixed-bottom has-shadow" role="navigation" aria-label="dropdown navigation">
