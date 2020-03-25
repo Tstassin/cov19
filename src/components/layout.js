@@ -125,9 +125,9 @@ const Layout = ({ children }) => {
         <div className={"navbar-menu" + (mobileMenu ? "is-active" : "")} >
           <div className="navbar-end is-hidden-desktop">
             <div class="navbar-item has-dropdown has-dropdown-up is-hoverable">
-              <a class="navbar-link" href="https://bulma.io/documentation/overview/start/">
+              <div class="navbar-link">
                 Customize charts
-              </a>
+              </div>
               <div class="navbar-dropdown is-right">
                 <CustomizeChartsMenuItems></CustomizeChartsMenuItems>
               </div>
