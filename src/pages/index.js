@@ -180,7 +180,7 @@ const IndexPage = ({ data }) => {
         i++
       }
     })
-    
+
     return data
   }
 
