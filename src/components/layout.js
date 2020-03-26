@@ -33,7 +33,6 @@ const Layout = ({ children }) => {
   `)
 
   const CustomizeChartsMenuItems = () => {
-    console.log(store)
     return (
       <>
         <a className="navbar-item" href="#">
