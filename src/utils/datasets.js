@@ -11,8 +11,10 @@ const getDataPoints = (data, dataNode, dataName, filter) => {
     const { name, dataDateName, dataDateFormat, ...rest } = dataNode
     return (
         data[name].edges.map(({ node }) => {
+            const date = moment(node[dataDateName], dataDateFormat).format(dateStandardOutputFormat)
             const dataPoint = {
-                t: moment(node[dataDateName], dataDateFormat).format(dateStandardOutputFormat),
+                t: date,
+                t_original: date,
                 y: node[dataName],
                 y_original: node[dataName],
             }
