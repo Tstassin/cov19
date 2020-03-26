@@ -157,12 +157,19 @@ const DataChart = ({ title, dataset, noDataCards, events, isLinear }) => {
             </p>
             {!noDataCards && <DataCards dataset={dataset.datasets}></DataCards>}
             <br />
-            <div className="is-responsive-chart"> 
+            <div className="is-responsive-chart">
                 <Scatter
                     data={dataset}
                     options={{
                         ...defaultOptions,
                         ...annotations,
+                        tooltips: {
+                            ...defaultOptions.tooltips,
+                            callbacks: {
+                                ...defaultOptions.tooltips.callbacks,
+                                title: (isLinear && store.commonOrigin) ? (t, o) => ("Day " + (t[0].index + 1)) : defaultOptions.tooltips.callbacks.title
+                            }
+                        },
                         scales: {
                             ...defaultOptions.scales,
                             xAxes: [
