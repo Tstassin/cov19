@@ -40,13 +40,14 @@ const IndexPage = ({ data }) => {
       content: 'Italy : nationwide lockdown',
     }
   },]
-  
+
   const dataBE = {
     name: 'allCovid19DataBe',
     dataDateName: 'date',
     dataDateFormat: "DD/MM/YYYY",
     population: 11400000,
     country: "Belgium",
+    countryCode: "BE",
     events: eventsBE,
   }
 
@@ -56,6 +57,7 @@ const IndexPage = ({ data }) => {
     dataDateFormat: "YYYY-MM-DD HH:mm:ss",
     population: 60480000,
     country: "Italy",
+    countryCode: "ITA",
     events: eventsITA,
   }
 

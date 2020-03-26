@@ -75,11 +75,13 @@ const defaultOptions = {
         intersect: false,
         callbacks: {
             title: (t, o) => (t[0].xLabel),
-            label: (t, o) => (
+            label: (t, o) => {
+                return (
+                " " + o.datasets[t.datasetIndex].dataNode.countryCode + "\t" +
                 " " + o.datasets[t.datasetIndex].label + " : " +
                 (Math.round(o.datasets[t.datasetIndex].data[t.index].y * 100) / 100 || "0") + " " +
                 "(" + getProgression(o.datasets[t.datasetIndex].data.slice(0, t.index + 1)) + ")"
-            ),
+            )},
         }
     },
     hover: {
