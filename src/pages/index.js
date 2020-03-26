@@ -81,7 +81,7 @@ const IndexPage = ({ data }) => {
       legend: legends.icu,
     },
     {
-      dataName: 'released',
+      dataName: 'daily_released',
       dataLabel: 'Released',
       dataColor: colors.info,
       type: 'bar',
@@ -89,7 +89,7 @@ const IndexPage = ({ data }) => {
       legend: legends.released,
     },
     {
-      dataName: 'deceased',
+      dataName: 'cumul_deceased',
       dataLabel: 'Deceased',
       dataColor: colors.danger,
       dataNode: dataBE,
@@ -142,7 +142,7 @@ const IndexPage = ({ data }) => {
     const newOrigins = []
 
     data.forEach((dataset, index) => {
-      if (dataset.dataName === 'deceased' || dataset.dataName === 'deceduti') {
+      if (dataset.dataName === 'cumul_deceased' || dataset.dataName === 'deceduti') {
         newOrigins[dataset.dataNode.name] = dataset.data.findIndex(dataPoint => dataPoint.y_original >= 10)
       }
     })
@@ -235,9 +235,9 @@ query MyQuery {
       daily_tests
       icu
       date
-      deceased
+      cumul_deceased
       hospitalized
-      released
+      daily_released
     }
   }
 }
