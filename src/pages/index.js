@@ -16,22 +16,6 @@ const IndexPage = ({ data }) => {
 
   const store = useStore()
 
-  const dataBE = {
-    name: 'allCovid19DataBe',
-    dataDateName: 'date',
-    dataDateFormat: "DD/MM/YYYY",
-    population: 11400000,
-    country: "Belgium",
-  }
-
-  const dataITA = {
-    name: 'allCovid19DataIta',
-    dataDateName: 'data',
-    dataDateFormat: "YYYY-MM-DD HH:mm:ss",
-    population: 60480000,
-    country: "Italy",
-  }
-
   const eventsBE = [{
     value: 'March 14, 2020',
     label: {
@@ -56,6 +40,25 @@ const IndexPage = ({ data }) => {
       content: 'Italy : nationwide lockdown',
     }
   },]
+  
+  const dataBE = {
+    name: 'allCovid19DataBe',
+    dataDateName: 'date',
+    dataDateFormat: "DD/MM/YYYY",
+    population: 11400000,
+    country: "Belgium",
+    events: eventsBE,
+  }
+
+  const dataITA = {
+    name: 'allCovid19DataIta',
+    dataDateName: 'data',
+    dataDateFormat: "YYYY-MM-DD HH:mm:ss",
+    population: 60480000,
+    country: "Italy",
+    events: eventsITA,
+  }
+
 
   const legends = {
     hospitalized: "Number of people receiving medical care in hospitals on given day",
@@ -69,6 +72,7 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'hospitalized',
       dataLabel: 'Hospitalized',
+      dataRef: 'hospitalized',
       dataColor: colors.success,
       type: 'bar',
       dataNode: dataBE,
@@ -77,6 +81,7 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'icu',
       dataLabel: 'ICU',
+      dataRef: 'icu',
       dataColor: colors.warning,
       type: 'bar',
       dataNode: dataBE,
@@ -85,6 +90,7 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'daily_released',
       dataLabel: 'Released',
+      dataRef: 'daily_released',
       dataColor: colors.info,
       type: 'bar',
       dataNode: dataBE,
@@ -93,6 +99,7 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'cumul_deceased',
       dataLabel: 'Deceased',
+      dataRef: 'cumul_deceased',
       dataColor: colors.danger,
       dataNode: dataBE,
       legend: legends.deceased,
@@ -103,6 +110,7 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'totale_ospedalizzati',
       dataLabel: 'Totale Ospedalizzati',
+      dataRef: 'hospitalized',
       dataColor: colors.success,
       dataNode: dataITA,
       type: 'bar',
@@ -111,6 +119,7 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'terapia_intensiva',
       dataLabel: 'Terapia Intensiva',
+      dataRef: 'icu',
       dataColor: colors.warning,
       dataNode: dataITA,
       type: 'bar',
@@ -119,6 +128,7 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'dimessi_guariti',
       dataLabel: 'Dimessi Guariti',
+      dataRef: 'cumul_released',
       dataColor: colors.info,
       dataNode: dataITA,
       legend: legends.released_total,
@@ -126,13 +136,14 @@ const IndexPage = ({ data }) => {
     {
       dataName: 'deceduti',
       dataLabel: 'Deceduti',
+      dataRef: 'cumul_deceased',
       dataColor: colors.danger,
       dataNode: dataITA,
       legend: legends.deceased,
     },
   ]
 
-  const normalize_y_axis_per_population = (dataPoint, dataNode, dataName) => (
+  const normalize_y_axis_per_population = (dataPoint, dataNode, dataRef) => (
     {
       ...dataPoint,
       y_original: dataPoint.y,
@@ -144,7 +155,7 @@ const IndexPage = ({ data }) => {
     const newOrigins = []
 
     data.forEach((dataset, index) => {
-      if (dataset.dataName === 'cumul_deceased' || dataset.dataName === 'deceduti') {
+      if (dataset.dataRef === 'cumul_deceased') {
         newOrigins[dataset.dataNode.name] = dataset.data.findIndex(dataPoint => dataPoint.y_original >= 10)
       }
     })
@@ -211,8 +222,8 @@ const IndexPage = ({ data }) => {
   return (
     <Layout>
       <SEO title={"Covid-19 Status in Belgium : " + [...statusPerDay.datasets[0].data].pop().t} />
-      <DataChart title="Status per day in Belgium" dataset={statusPerDay} events={eventsBE}></DataChart>
-      <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA} events={eventsITA}></DataChart>
+      <DataChart title="Status per day in Belgium" dataset={statusPerDay}></DataChart>
+      <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA}></DataChart>
       <DataChart
         title="Status per day in Belgium (with ghost Italy data)"
         noDataCards={true}

@@ -134,20 +134,19 @@ const DataCards = ({ dataset }) => {
     )
 }
 
-const DataChart = ({ title, dataset, noDataCards, events, isLinear }) => {
+const getEventsList = (datasets) => {
+    const dataNodes = datasets.map(dataset => dataset.dataNode)
+    const dataNodesUnique = [...new Set(dataNodes)]
+    const eventsList = []
+    dataNodesUnique.forEach(({ events }) => events.forEach(event => eventsList.push(event)))
+    return eventsList
+}
+
+const DataChart = ({ title, dataset, noDataCards, isLinear }) => {
 
     const store = useStore()
 
-    let annotations = {}
-    if (events) {
-        annotations = {
-            annotation: {
-                annotations: events.map(
-                    (event, index) => merge({}, defaultAnnotationOptions, { label: { yAdjust: (defaultAnnotationOptions.label.yAdjust * index) + 10 } }, event)
-                )
-            }
-        }
-    }
+    const events = getEventsList(dataset.datasets)
 
     return (
         <div className="section container">
@@ -162,7 +161,19 @@ const DataChart = ({ title, dataset, noDataCards, events, isLinear }) => {
                     data={dataset}
                     options={{
                         ...defaultOptions,
-                        ...annotations,
+                        annotation: {
+                            annotations: events.map(
+                                (event, index) => ({
+                                    ...defaultAnnotationOptions,
+                                    ...event,
+                                    label: {
+                                        ...defaultAnnotationOptions.label,
+                                        ...event.label,
+                                        yAdjust: (defaultAnnotationOptions.label.yAdjust * index) + 10,
+                                    },
+                                })
+                            )
+                        },
                         tooltips: {
                             ...defaultOptions.tooltips,
                             callbacks: {
@@ -205,7 +216,7 @@ const DataChart = ({ title, dataset, noDataCards, events, isLinear }) => {
                     plugins={[ChartAnnotation]}
                 ></Scatter>
             </div>
-        </div>
+        </div >
     )
 }
 export default DataChart

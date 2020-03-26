@@ -27,12 +27,13 @@ const getChartJSDataset = (dataSet, data, filter_single = _ => _, filter_dataset
     {
         datasets: filter_datasets(
             dataSet.map(
-                ({ dataLabel, dataName, dataColor, type, dataNode, legend, greyed }) => (
+                ({ dataLabel, dataRef, dataName, dataColor, type, dataNode, legend, greyed }) => (
                     {
                         borderColor: greyed ? '#ccc' : dataColor.value,
                         backgroundColor: type && type === 'bar' ? (greyed ? '#ddd' : dataColor.value) : 'transparent',
                         dataName: dataName,
                         dataNode: dataNode,
+                        dataRef: dataRef,
                         data: filter_dataset(getDataPoints(data, dataNode, dataName, filter_single)),
                         dataColor: dataColor,
                         hoverBackgroundColor: dataColor.value,
