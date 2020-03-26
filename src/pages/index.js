@@ -21,6 +21,7 @@ const IndexPage = ({ data }) => {
     dataDateName: 'date',
     dataDateFormat: "DD/MM/YYYY",
     population: 11400000,
+    country: "Belgium",
   }
 
   const dataITA = {
@@ -28,6 +29,7 @@ const IndexPage = ({ data }) => {
     dataDateName: 'data',
     dataDateFormat: "YYYY-MM-DD HH:mm:ss",
     population: 60480000,
+    country: "Italy",
   }
 
   const eventsBE = [{
