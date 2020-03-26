@@ -35,33 +35,33 @@ const Layout = ({ children }) => {
   const CustomizeChartsMenuItems = () => {
     return (
       <>
-        <a className="navbar-item" href="#">
+        <a className="navbar-item"
+          onClick={() => store.setToggleLogarithmicScale(!store.toggleLogarithmicScale)}>
           <div className="field">
             <label htmlFor="setToggleLogarithmicScale" className="is-size-7"><b className="has-text-primary">Y</b>-axis | &nbsp;linear&nbsp;&nbsp;</label>
             <input id="setToggleLogarithmicScale" type="checkbox" name="setToggleLogarithmicScale" className="switch is-small is-thin"
-              onChange={() => store.setToggleLogarithmicScale(!store.toggleLogarithmicScale)}
               checked={store.toggleLogarithmicScale ? "checked" : ""}
             />
             <label htmlFor="setToggleLogarithmicScale" className="is-size-7">logarithmic</label>
           </div>
         </a>
-        <a className="navbar-item" href="#">
+        <a className="navbar-item"
+          onClick={() => store.setNormalizePopulations(!store.normalizePopulations)}>
           <div className="field">
-          <label htmlFor="setToggleLogarithmicScale" className="is-size-7"><b className="has-text-primary">Y</b>-axis |&nbsp;&nbsp;</label>
+            <label htmlFor="setToggleLogarithmicScale" className="is-size-7"><b className="has-text-primary">Y</b>-axis |&nbsp;&nbsp;</label>
 
             <input id="setNormalizePopulations" type="checkbox" name="setNormalizePopulations" className="switch is-outlined is-small"
-              onChange={() => store.setNormalizePopulations(!store.normalizePopulations)}
               checked={store.normalizePopulations ? "checked" : ""}
             />
             <label htmlFor="setNormalizePopulations">normalize per 100.000 citizens</label>
           </div>
         </a>
-        <a className="navbar-item" href="#">
+        <a className="navbar-item"
+          onClick={() => store.setCommonOrigin(!store.commonOrigin)}>
           <div className="field">
-          <label htmlFor="setToggleLogarithmicScale" className="is-size-7"><b className="has-text-primary">X</b>-axis |&nbsp;&nbsp;</label>
+            <label htmlFor="setToggleLogarithmicScale" className="is-size-7"><b className="has-text-primary">X</b>-axis |&nbsp;&nbsp;</label>
 
             <input id="setCommonOrigin" type="checkbox" name="setCommonOrigin" className="switch is-outlined is-small"
-              onChange={() => store.setCommonOrigin(!store.commonOrigin)}
               checked={store.commonOrigin ? "checked" : ""}
             />
             <label htmlFor="setCommonOrigin">origin set to <span className="has-text-danger">deceased</span> >= 10</label>
