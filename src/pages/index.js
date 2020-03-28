@@ -61,7 +61,6 @@ const IndexPage = ({ data }) => {
     events: eventsITA,
   }
 
-
   const legends = {
     hospitalized: "Number of people receiving medical care in hospitals on given day",
     icu: "Number of people receiving medical care in Intensive Care Units on given day",
@@ -176,7 +175,7 @@ const IndexPage = ({ data }) => {
   }
 
   const sameDatasetSize = (data) => {
-    const dataPointPrototype = {t: 0, y: "", y_original: ""}
+    const dataPointPrototype = { t: 0, y: "", y_original: "" }
 
     let minDate = moment(data[0].data[0].t)
     let maxDate = moment(data[0].data[0].t)
@@ -191,7 +190,7 @@ const IndexPage = ({ data }) => {
 
       let i = 1
       while (i <= diff) {
-        dataset.data.unshift({...dataPointPrototype, t: currentDate.subtract(1, 'days').format(dateStandardOutputFormat)})
+        dataset.data.unshift({ ...dataPointPrototype, t: currentDate.subtract(1, 'days').format(dateStandardOutputFormat) })
         i++
       }
     })
@@ -200,7 +199,7 @@ const IndexPage = ({ data }) => {
   }
 
   const statusPerDay = getChartJSDataset(
-    dataSetBE, 
+    dataSetBE,
     data,
     store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
     _ => _,
@@ -211,15 +210,16 @@ const IndexPage = ({ data }) => {
     _ => _,
     store.commonOrigin ? normalize_x_axis_origin : _ => _)
 
-  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
+    const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
 
-  const normalized = getChartJSDataset(
+  const normalizedBEvsITA = getChartJSDataset(
     [...dataSetBE, ...dataSetITA_greyed],
     data,
     store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
     _ => _,
     store.commonOrigin ? normalize_x_axis_origin : sameDatasetSize
   )
+
 
   return (
     <Layout>
@@ -230,7 +230,7 @@ const IndexPage = ({ data }) => {
         title="Status per day in Belgium (with ghost Italy data)"
         noDataCards={true}
         events={[...eventsBE, ...eventsITA]}
-        dataset={normalized}
+        dataset={normalizedBEvsITA}
         isLinear={true}
       ></DataChart>
     </Layout>

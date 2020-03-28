@@ -108,7 +108,7 @@ const getProgression = (data) => {
 const getMax = (datasets) => {
     const allData = datasets.map(dataset => dataset.data.map(dataPoint => dataPoint.y))
     const flattened = [].concat.apply([], allData)
-    const max = Math.max(...flattened)
+    const max = Math.max(...flattened.filter(f => f))
     const roundedMax = Math.pow(10, Math.round(max).toString().length)
     return roundedMax
 }
@@ -140,7 +140,7 @@ const getEventsList = (datasets) => {
     const dataNodes = datasets.map(dataset => dataset.dataNode)
     const dataNodesUnique = [...new Set(dataNodes)]
     const eventsList = []
-    dataNodesUnique.forEach(({ events }) => events.forEach(event => eventsList.push(event)))
+    dataNodesUnique.forEach(({ events }) => events && events.forEach(event => eventsList.push(event)))
     return eventsList
 }
 
