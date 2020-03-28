@@ -90,13 +90,12 @@ const IndexPage = ({ data }) => {
       legend: legends.icu,
     },
     {
-      dataName: 'daily_released',
+      dataName: 'cumul_released',
       dataLabel: 'Released',
-      dataRef: 'daily_released',
+      dataRef: 'cumul_released',
       dataColor: colors.info,
-      type: 'bar',
       dataNode: dataBE,
-      legend: legends.released,
+      legend: legends.released_total,
     },
     {
       dataName: 'cumul_deceased',
@@ -253,6 +252,7 @@ query MyQuery {
       cumul_deceased
       hospitalized
       daily_released
+      cumul_released
     }
   }
 }
