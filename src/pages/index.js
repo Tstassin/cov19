@@ -261,13 +261,7 @@ allCovid19DataIta(filter: {deceduti: {gte: 10}}) {
     node {
       deceduti
       dimessi_guariti
-      isolamento_domiciliare
-      nuovi_attualmente_positivi
-      ricoverati_con_sintomi
-      tamponi
       terapia_intensiva
-      totale_attualmente_positivi
-      totale_casi
       totale_ospedalizzati
       data
     }
