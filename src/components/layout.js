@@ -91,7 +91,7 @@ const Layout = ({ children }) => {
         <br /> opendata from :<br />
         <ul>
           <li>
-            &mdash;&nbsp;Belgium : <a href="https://github.com/eschnou/covid19-be"> eschnou/covid19-be </a>
+            &mdash;&nbsp;Belgium : <a href="https://epistat.wiv-isp.be/covid/"> epistat </a>
             (data source : <a href="https://epidemio.wiv-isp.be/ID/Pages/2019-nCoV_epidemiological_situation.aspx">sciensano</a>)
           </li>
           <li>

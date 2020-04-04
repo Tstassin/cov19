@@ -43,8 +43,8 @@ const IndexPage = ({ data }) => {
 
   const dataBE = {
     name: 'allCovid19DataBe',
-    dataDateName: 'date',
-    dataDateFormat: "DD/MM/YYYY",
+    dataDateName: 'DATE',
+    dataDateFormat: "YYYY-MM-DD",
     population: 11400000,
     country: "Belgium",
     countryCode: "BE",
@@ -71,7 +71,7 @@ const IndexPage = ({ data }) => {
 
   const dataSetBE = [
     {
-      dataName: 'hospitalized',
+      dataName: 'TOTAL_IN',
       dataLabel: 'Hospitalized',
       dataRef: 'hospitalized',
       dataColor: colors.success,
@@ -80,7 +80,7 @@ const IndexPage = ({ data }) => {
       legend: legends.hospitalized,
     },
     {
-      dataName: 'icu',
+      dataName: 'TOTAL_IN_ICU',
       dataLabel: 'ICU',
       dataRef: 'icu',
       dataColor: colors.warning,
@@ -89,7 +89,7 @@ const IndexPage = ({ data }) => {
       legend: legends.icu,
     },
     {
-      dataName: 'cumul_released',
+      dataName: 'NEW_OUT',
       dataLabel: 'Released',
       dataRef: 'cumul_released',
       dataColor: colors.info,
@@ -97,7 +97,7 @@ const IndexPage = ({ data }) => {
       legend: legends.released_total,
     },
     {
-      dataName: 'cumul_deceased',
+      dataName: 'DEATHS',
       dataLabel: 'Deceased',
       dataRef: 'cumul_deceased',
       dataColor: colors.danger,
@@ -142,6 +142,32 @@ const IndexPage = ({ data }) => {
       legend: legends.deceased,
     },
   ]
+
+  const aggregate_data_by_date = (data) => {
+    data['allCovid19DataBe'].edges.sort((a, b) => (a.node.DATE > b.node.DATE) )
+    let currentDate = 0
+    const newEdges = data['allCovid19DataBe'].edges.reduce(
+      (acc, edge, index) => {
+        if (currentDate === edge.node.DATE) {
+          acc[acc.length - 1].node.TOTAL_IN += edge.node.TOTAL_IN
+          acc[acc.length - 1].node.TOTAL_IN_ICU += edge.node.TOTAL_IN_ICU
+          acc[acc.length - 1].node.DEATHS += edge.node.DEATHS
+          acc[acc.length - 1].node.NEW_OUT += edge.node.NEW_OUT
+        } else {
+          currentDate = edge.node.DATE
+          if (edge.node.DATE !== null) {
+            acc.push({node: {...edge.node}})
+            if (acc.length > 1) {
+              acc[acc.length - 1].node.DEATHS += acc[acc.length - 2].node.DEATHS
+              acc[acc.length - 1].node.NEW_OUT += acc[acc.length - 2].node.NEW_OUT
+            }
+          }
+        }
+        return acc
+      }, []
+      )
+    return {...data, allCovid19DataBe : {edges : newEdges}}
+  }
 
   const normalize_y_axis_per_population = (dataPoint, dataNode, dataRef) => (
     {
@@ -197,14 +223,18 @@ const IndexPage = ({ data }) => {
     return data
   }
 
+  const cleanData = aggregate_data_by_date(data)
+
   const statusPerDay = getChartJSDataset(
     dataSetBE,
-    data,
+    cleanData,
     store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
     _ => _,
     store.commonOrigin ? normalize_x_axis_origin : _ => _)
 
-  const statusPerDayITA = getChartJSDataset(dataSetITA, data,
+  const statusPerDayITA = getChartJSDataset(
+    dataSetITA, 
+    cleanData,
     store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
     _ => _,
     store.commonOrigin ? normalize_x_axis_origin : _ => _)
@@ -213,12 +243,11 @@ const IndexPage = ({ data }) => {
 
   const normalizedBEvsITA = getChartJSDataset(
     [...dataSetBE, ...dataSetITA_greyed],
-    data,
+    cleanData,
     store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
     _ => _,
     store.commonOrigin ? normalize_x_axis_origin : sameDatasetSize
   )
-
 
   return (
     <Layout>
@@ -243,16 +272,11 @@ query MyQuery {
           allCovid19DataBe {
           edges {
           node {
-          cumul_cases
-        cumul_tests
-      daily_cases
-      daily_tests
-      icu
-      date
-      cumul_deceased
-      hospitalized
-      daily_released
-      cumul_released
+      DATE
+      TOTAL_IN
+      TOTAL_IN_ICU
+      DEATHS
+      NEW_OUT
     }
   }
 }
