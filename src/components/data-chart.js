@@ -101,8 +101,8 @@ const getProgression = (data) => {
     if (yesterday === undefined) return "+100%"
     if (!yesterday) yesterday = 1
     const progressionRatio = (today - yesterday) / yesterday
-    const percentage = Math.round(progressionRatio * 100)
-    return ((percentage > 0) && "+") + percentage + "%"
+    const percentage = (progressionRatio * 100).toFixed(1)
+    return ((percentage > 0) ? "+" : '') + percentage + "%"
 }
 
 const getMax = (datasets) => {
