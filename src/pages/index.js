@@ -144,9 +144,10 @@ const IndexPage = ({ data }) => {
   ]
 
   const aggregate_data_by_date = (data) => {
-    data['allCovid19DataBe'].edges.sort((a, b) => (a.node.DATE > b.node.DATE) )
     let currentDate = 0
-    const newEdges = data['allCovid19DataBe'].edges.reduce(
+    //Deep copy dataset
+    const newEdges = ([...data['allCovid19DataBe'].edges]).map(node => ({...node}))
+    const newEdgesReduced = newEdges.reduce(
       (acc, edge, index) => {
         if (currentDate === edge.node.DATE) {
           acc[acc.length - 1].node.TOTAL_IN += edge.node.TOTAL_IN
@@ -156,7 +157,7 @@ const IndexPage = ({ data }) => {
         } else {
           currentDate = edge.node.DATE
           if (edge.node.DATE !== null) {
-            acc.push({node: {...edge.node}})
+            acc.push({ node: { ...edge.node } })
             if (acc.length > 1) {
               acc[acc.length - 1].node.DEATHS += acc[acc.length - 2].node.DEATHS
               acc[acc.length - 1].node.NEW_OUT += acc[acc.length - 2].node.NEW_OUT
@@ -165,52 +166,52 @@ const IndexPage = ({ data }) => {
         }
         return acc
       }, []
-      )
-    return {...data, allCovid19DataBe : {edges : newEdges}}
+    )
+    return { ...data, allCovid19DataBe: { edges: newEdgesReduced } }
   }
 
   const normalize_y_axis_per_population = (dataPoint, dataNode, dataRef) => (
     {
       ...dataPoint,
       y_original: dataPoint.y,
-      y: (dataPoint.y / dataNode.population) * 100000
+      y: (dataPoint.y / dataNode.population) * store.normalizePopulationsValue
     }
   )
 
   const normalize_x_axis_origin = (data) => {
     const newOrigins = []
+    console.log("target", store.commonOriginValue)
 
     data.forEach((dataset, index) => {
       if (dataset.dataRef === 'cumul_deceased') {
-        newOrigins[dataset.dataNode.name] = dataset.data.findIndex(dataPoint => dataPoint.y_original >= 10)
+        newOrigins[dataset.dataNode.name] = dataset.data.findIndex((dataPoint, index) => dataPoint.y_original >= store.commonOriginValue)
       }
     })
     let minMax = { min: data[0].data.length, max: data[0].data.length }
 
     data.forEach((dataset, index) => {
       dataset.data = [...dataset.data].splice(newOrigins[dataset.dataNode.name])
-      dataset.data = dataset.data.map((dataPoint, index) => ({ ...dataPoint, t: moment(data[0].data[0].t).add(index, 'days').format(dateStandardOutputFormat) }))
+      dataset.data = dataset.data.map((dataPoint, index) => ({ ...dataPoint, t: moment(data[0].data[0].t, dateStandardOutputFormat).add(index, 'days').format(dateStandardOutputFormat) }))
       if (minMax.min > dataset.data.length) minMax.min = dataset.data.length
       if (minMax.max < dataset.data.length) minMax.max = dataset.data.length
     })
 
     data.forEach((dataset, index) => dataset.data = [...dataset.data].splice(0, Math.min(minMax.min * 2 + 1, minMax.max)))
-
     return data
   }
 
   const sameDatasetSize = (data) => {
     const dataPointPrototype = { t: 0, y: "", y_original: "" }
 
-    let minDate = moment(data[0].data[0].t)
-    let maxDate = moment(data[0].data[0].t)
+    let minDate = moment(data[0].data[0].t, dateStandardOutputFormat)
+    let maxDate = moment(data[0].data[0].t, dateStandardOutputFormat)
     data.forEach(dataset => {
-      moment(dataset.data[0].t).isBefore(minDate) && (minDate = moment(dataset.data[0].t))
-      moment(dataset.data[dataset.data.length - 1].t).isAfter(maxDate) && (maxDate = moment(dataset.data[dataset.data.length - 1].t))
+      moment(dataset.data[0].t, dateStandardOutputFormat).isBefore(minDate) && (minDate = moment(dataset.data[0].t, dateStandardOutputFormat))
+      moment(dataset.data[dataset.data.length - 1].t, dateStandardOutputFormat).isAfter(maxDate) && (maxDate = moment(dataset.data[dataset.data.length - 1].t, dateStandardOutputFormat))
     })
 
     data.forEach(dataset => {
-      let currentDate = moment(dataset.data[0].t)
+      let currentDate = moment(dataset.data[0].t, dateStandardOutputFormat)
       let diff = currentDate.diff(minDate, 'days')
 
       let i = 1
@@ -233,13 +234,13 @@ const IndexPage = ({ data }) => {
     store.commonOrigin ? normalize_x_axis_origin : _ => _)
 
   const statusPerDayITA = getChartJSDataset(
-    dataSetITA, 
+    dataSetITA,
     cleanData,
     store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
     _ => _,
     store.commonOrigin ? normalize_x_axis_origin : _ => _)
 
-    const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
+  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
 
   const normalizedBEvsITA = getChartJSDataset(
     [...dataSetBE, ...dataSetITA_greyed],
@@ -269,7 +270,7 @@ export default IndexPage
 
 export const query = graphql`
 query MyQuery {
-          allCovid19DataBe {
+          allCovid19DataBe(sort: {fields: DATE}) {
           edges {
           node {
       DATE
