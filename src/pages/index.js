@@ -144,9 +144,10 @@ const IndexPage = ({ data }) => {
   ]
 
   const aggregate_data_by_date = (data) => {
-    data['allCovid19DataBe'].edges.sort((a, b) => (a.node.DATE > b.node.DATE) )
     let currentDate = 0
-    const newEdges = data['allCovid19DataBe'].edges.reduce(
+    //Deep copy dataset
+    const newEdges = ([...data['allCovid19DataBe'].edges]).map(node => ({...node}))
+    const newEdgesReduced = newEdges.reduce(
       (acc, edge, index) => {
         if (currentDate === edge.node.DATE) {
           acc[acc.length - 1].node.TOTAL_IN += edge.node.TOTAL_IN
@@ -165,8 +166,8 @@ const IndexPage = ({ data }) => {
         }
         return acc
       }, []
-      )
-    return {...data, allCovid19DataBe : {edges : newEdges}}
+    )
+    return { ...data, allCovid19DataBe: { edges: newEdgesReduced } }
   }
 
   const normalize_y_axis_per_population = (dataPoint, dataNode, dataRef) => (
@@ -239,7 +240,7 @@ const IndexPage = ({ data }) => {
     _ => _,
     store.commonOrigin ? normalize_x_axis_origin : _ => _)
 
-    const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
+  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
 
   const normalizedBEvsITA = getChartJSDataset(
     [...dataSetBE, ...dataSetITA_greyed],
@@ -269,7 +270,7 @@ export default IndexPage
 
 export const query = graphql`
 query MyQuery {
-          allCovid19DataBe {
+          allCovid19DataBe(sort: {fields: DATE}) {
           edges {
           node {
       DATE
