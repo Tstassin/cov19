@@ -64,7 +64,7 @@ const Layout = ({ children }) => {
             <input id="setCommonOrigin" type="checkbox" name="setCommonOrigin" className="switch is-outlined is-small"
               checked={store.commonOrigin ? "checked" : ""}
             />
-            <label htmlFor="setCommonOrigin">origin set to <span className="has-text-danger">deceased</span> >= 10</label>
+            <label htmlFor="setCommonOrigin">origin set to <span className="has-text-danger">deceased</span> &gt;= 10</label>
           </div>
         </a>
       </>
@@ -94,10 +94,6 @@ const Layout = ({ children }) => {
             &mdash;&nbsp;Belgium : <a href="https://epistat.wiv-isp.be/covid/"> epistat </a>
             (data source : <a href="https://epidemio.wiv-isp.be/ID/Pages/2019-nCoV_epidemiological_situation.aspx">sciensano</a>)
           </li>
-          <li>
-            &mdash;&nbsp;Italy : <a href="https://github.com/pcm-dpc/COVID-19"> pcm-dpc/COVID-19 </a>
-            (data source : <a href="http://www.protezionecivile.it/attivita-rischi/rischio-sanitario/emergenze/coronavirus">protezionecivile</a>)
-          </li>
         </ul>
         built using
           {` `}
@@ -105,7 +101,7 @@ const Layout = ({ children }) => {
           <a href="https://www.chartjs.org"> Chart.js</a>,
           <a href="https://bulma.io"> Bulma</a>
         <br />
-        I'm not a professional journalist, data scientist nor epidemiologist, this website is enthusiastic amateur work, for the greater good
+        I'm not a professional journalist, data scientist nor epidemiologist.
       </footer>
 
       <nav className="navbar is-fixed-bottom has-shadow" role="navigation" aria-label="dropdown navigation">
