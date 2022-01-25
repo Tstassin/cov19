@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: `Covid-19 Status in Belgium`,
-    description: `Charting relevant Covid19 data in Belgium to help people further understand the situation and raise awareness`,
+    description: `Charting some data provided by sciensano (Belgium) to better understand the health care overflow in our country.`,
     author: `@tstassin`,
     siteUrl: 'https://cov19.be'
   },
