@@ -38,11 +38,11 @@ const Layout = ({ children }) => {
         <a className="navbar-item"
           onClick={() => store.setToggleLogarithmicScale(!store.toggleLogarithmicScale)}>
           <div className="field">
-            <label htmlFor="setToggleLogarithmicScale" className="is-size-7"><b className="has-text-primary">Y</b>-axis | &nbsp;linear&nbsp;&nbsp;</label>
-            <input id="setToggleLogarithmicScale" type="checkbox" name="setToggleLogarithmicScale" className="switch is-small is-thin"
+            <label htmlFor="setToggleLogarithmicScale" className="is-size-7"><b className="has-text-primary">Y</b>-axis | &nbsp;&nbsp;</label>
+            <input id="setToggleLogarithmicScale" type="checkbox" name="setToggleLogarithmicScale" className="switch is-outlined is-small"
               checked={store.toggleLogarithmicScale ? "checked" : ""}
             />
-            <label htmlFor="setToggleLogarithmicScale" className="is-size-7">logarithmic</label>
+            <label htmlFor="setToggleLogarithmicScale" className="is-size-7">logarithmic scale</label>
           </div>
         </a>
         <a className="navbar-item"
