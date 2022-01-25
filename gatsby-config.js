@@ -39,17 +39,6 @@ module.exports = {
       resolve: 'gatsby-source-json',
       options: {
         // name the gatsby node
-        name: 'covid19DataITA',
-        // url for JSON endpoint
-        uri: 'https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json',
-        // image location to process images. Default: "image.url"
-        //image_location: "image.url",
-      }
-    },
-    {
-      resolve: 'gatsby-source-json',
-      options: {
-        // name the gatsby node
         name: 'covid19DataBE',
         // url for JSON endpoint
         uri: 'https://epistat.sciensano.be/Data/COVID19BE_HOSP.json',

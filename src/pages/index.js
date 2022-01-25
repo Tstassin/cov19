@@ -29,17 +29,7 @@ const IndexPage = ({ data }) => {
     }
   }]
 
-  const eventsITA = [{
-    value: 'March 8, 2020',
-    label: {
-      content: 'Italy : north lockdown',
-    }
-  }, {
-    value: 'March 10, 2020',
-    label: {
-      content: 'Italy : nationwide lockdown',
-    }
-  },]
+
 
   const dataBE = {
     name: 'allCovid19DataBe',
@@ -49,16 +39,6 @@ const IndexPage = ({ data }) => {
     country: "Belgium",
     countryCode: "BE",
     events: eventsBE,
-  }
-
-  const dataITA = {
-    name: 'allCovid19DataIta',
-    dataDateName: 'data',
-    dataDateFormat: "YYYY-MM-DD HH:mm:ss",
-    population: 60480000,
-    country: "Italy",
-    countryCode: "ITA",
-    events: eventsITA,
   }
 
   const legends = {
@@ -102,43 +82,6 @@ const IndexPage = ({ data }) => {
       dataRef: 'cumul_deceased',
       dataColor: colors.danger,
       dataNode: dataBE,
-      legend: legends.deceased,
-    },
-  ]
-
-  const dataSetITA = [
-    {
-      dataName: 'totale_ospedalizzati',
-      dataLabel: 'Totale Ospedalizzati',
-      dataRef: 'hospitalized',
-      dataColor: colors.success,
-      dataNode: dataITA,
-      type: 'bar',
-      legend: legends.hospitalized,
-    },
-    {
-      dataName: 'terapia_intensiva',
-      dataLabel: 'Terapia Intensiva',
-      dataRef: 'icu',
-      dataColor: colors.warning,
-      dataNode: dataITA,
-      type: 'bar',
-      legend: legends.icu,
-    },
-    {
-      dataName: 'dimessi_guariti',
-      dataLabel: 'Dimessi Guariti',
-      dataRef: 'cumul_released',
-      dataColor: colors.info,
-      dataNode: dataITA,
-      legend: legends.released_total,
-    },
-    {
-      dataName: 'deceduti',
-      dataLabel: 'Deceduti',
-      dataRef: 'cumul_deceased',
-      dataColor: colors.danger,
-      dataNode: dataITA,
       legend: legends.deceased,
     },
   ]
@@ -199,30 +142,6 @@ const IndexPage = ({ data }) => {
     return data
   }
 
-  const sameDatasetSize = (data) => {
-    const dataPointPrototype = { t: 0, y: "", y_original: "" }
-
-    let minDate = moment(data[0].data[0].t, dateStandardOutputFormat)
-    let maxDate = moment(data[0].data[0].t, dateStandardOutputFormat)
-    data.forEach(dataset => {
-      moment(dataset.data[0].t, dateStandardOutputFormat).isBefore(minDate) && (minDate = moment(dataset.data[0].t, dateStandardOutputFormat))
-      moment(dataset.data[dataset.data.length - 1].t, dateStandardOutputFormat).isAfter(maxDate) && (maxDate = moment(dataset.data[dataset.data.length - 1].t, dateStandardOutputFormat))
-    })
-
-    data.forEach(dataset => {
-      let currentDate = moment(dataset.data[0].t, dateStandardOutputFormat)
-      let diff = currentDate.diff(minDate, 'days')
-
-      let i = 1
-      while (i <= diff) {
-        dataset.data.unshift({ ...dataPointPrototype, t: currentDate.subtract(1, 'days').format(dateStandardOutputFormat) })
-        i++
-      }
-    })
-
-    return data
-  }
-
   const cleanData = aggregate_data_by_date(data)
 
   const statusPerDay = getChartJSDataset(
@@ -231,36 +150,10 @@ const IndexPage = ({ data }) => {
     store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
     _ => _,
     store.commonOrigin ? normalize_x_axis_origin : _ => _)
-
-  const statusPerDayITA = getChartJSDataset(
-    dataSetITA,
-    cleanData,
-    store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
-    _ => _,
-    store.commonOrigin ? normalize_x_axis_origin : _ => _)
-
-  const dataSetITA_greyed = dataSetITA.map(dataset => ({ ...dataset, greyed: true }))
-
-  const normalizedBEvsITA = getChartJSDataset(
-    [...dataSetBE, ...dataSetITA_greyed],
-    cleanData,
-    store.normalizePopulations ? normalize_y_axis_per_population : _ => _,
-    _ => _,
-    store.commonOrigin ? normalize_x_axis_origin : sameDatasetSize
-  )
-
   return (
     <Layout>
       <SEO title={"Covid-19 Status in Belgium : " + [...statusPerDay.datasets[0].data].pop().t} />
       <DataChart title="Status per day in Belgium" dataset={statusPerDay}></DataChart>
-      <DataChart title="Status per day in Italy (for reference)" dataset={statusPerDayITA}></DataChart>
-      <DataChart
-        title="Status per day in Belgium (with ghost Italy data)"
-        noDataCards={true}
-        events={[...eventsBE, ...eventsITA]}
-        dataset={normalizedBEvsITA}
-        isLinear={true}
-      ></DataChart>
     </Layout>
   )
 }
@@ -277,17 +170,6 @@ query MyQuery {
       TOTAL_IN_ICU
       DEATHS
       NEW_OUT
-    }
-  }
-}
-allCovid19DataIta(filter: {deceduti: {gte: 10}}) {
-  edges {
-    node {
-      deceduti
-      dimessi_guariti
-      terapia_intensiva
-      totale_ospedalizzati
-      data
     }
   }
 }
