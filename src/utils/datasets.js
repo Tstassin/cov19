@@ -42,6 +42,7 @@ const getChartJSDataset = (dataSet, data, filter_single = _ => _, filter_dataset
                         offset: true,
                         order: (type && type === 'bar') ? 2 : 1,
                         type: type && type,
+                        hidden: !type,
                         ...defaultDataOptions
                     }
                 )
