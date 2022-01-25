@@ -5,31 +5,31 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
-    "bulma": "^0.8.0",
-    "bulma-switch": "^2.0.0",
+    "bulma": "^0.9.3",
+    "bulma-switch": "^2.0.4",
     "bulma-tooltip": "^3.0.2",
     "chart.js": "^2.9.3",
     "chartjs-plugin-annotation": "^0.5.7",
-    "gatsby": "^2.19.43",
-    "gatsby-image": "^2.2.43",
-    "gatsby-plugin-manifest": "^2.2.47",
-    "gatsby-plugin-offline": "^3.0.40",
-    "gatsby-plugin-react-helmet": "^3.1.23",
-    "gatsby-plugin-sass": "^2.1.31",
-    "gatsby-plugin-sharp": "^2.4.12",
-    "gatsby-source-filesystem": "^2.1.55",
+    "gatsby": "^4.5.4",
+    "gatsby-image": "^3.11.0",
+    "gatsby-plugin-manifest": "^4.5.2",
+    "gatsby-plugin-offline": "^5.5.2",
+    "gatsby-plugin-react-helmet": "^5.5.0",
+    "gatsby-plugin-sass": "^5.5.0",
+    "gatsby-plugin-sharp": "^4.5.2",
+    "gatsby-source-filesystem": "^4.5.2",
     "gatsby-source-json": "github:tstassin/gatsby-source-json",
-    "gatsby-transformer-csv": "^2.2.1",
-    "gatsby-transformer-sharp": "^2.3.18",
-    "node-sass": "^4.13.1",
-    "prop-types": "^15.7.2",
+    "gatsby-transformer-csv": "^4.5.0",
+    "gatsby-transformer-sharp": "^4.5.0",
+    "node-sass": "^7.0.1",
+    "prop-types": "^15.8.1",
     "react": "^16.12.0",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.12.0",
-    "react-helmet": "^5.2.1"
+    "react-helmet": "^6.1.0"
   },
   "devDependencies": {
-    "prettier": "^1.19.1"
+    "prettier": "^2.5.1"
   },
   "keywords": [
     "gatsby"
